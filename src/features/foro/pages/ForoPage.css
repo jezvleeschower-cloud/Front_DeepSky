@@ -1,0 +1,21 @@
+.foro-page{min-height:100vh;color:var(--text-main);background-size:cover;background-position:center;background-repeat:no-repeat}
+.foro-page-inner{padding:2rem;max-width:1200px;margin:0 auto}
+.foro-hero{margin-bottom:2rem;background:rgba(0,0,0,0.32);padding:1.5rem;border-radius:24px}
+.foro-menu-location{display:inline-flex;align-items:center;gap:0.75rem;margin-bottom:1rem;padding:0.7rem 1rem;background:rgba(255,255,255,0.08);border-radius:999px;border:1px solid rgba(255,255,255,0.12)}
+.foro-menu-location img{width:28px;height:auto}
+.foro-menu-location span{color:var(--text-main);font-size:0.95rem;font-weight:600}
+.foro-hero h1{font-size:2.4rem;margin-bottom:0.6rem}
+.foro-hero p{font-size:1rem;color:var(--text-muted)}
+.list-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.new-topic-btn,.back-btn{background:rgba(255,255,255,0.08);border:1px solid var(--border-color);color:var(--text-main);padding:0.85rem 1.2rem;border-radius:12px;cursor:pointer}
+.topics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+.topic-card{padding:1.2rem;border-radius:18px;background:rgba(18,12,44,0.75);border:1px solid rgba(255,255,255,0.08);cursor:pointer;transition:transform .2s ease,box-shadow .2s ease}
+.topic-card:hover{transform:translateY(-3px);box-shadow:0 18px 40px rgba(0,0,0,0.22)}
+.topic-card h3{margin:0 0 0.75rem;font-size:1.05rem}
+.topic-info{display:flex;justify-content:space-between;font-size:0.9rem;color:var(--text-muted)}
+.topic-detail{background:rgba(0,0,0,0.35);padding:1.5rem;border-radius:20px}
+.topic-meta{margin:0 0 1.5rem;color:var(--text-muted)}
+.topic-messages .message-card{padding:1rem;border-radius:16px;background:rgba(255,255,255,0.04);margin-bottom:1rem}
+.message-author{display:block;margin-top:0.75rem;font-size:0.85rem;color:var(--text-muted)}
+.new-message-box textarea{width:100%;min-height:140px;padding:1rem;border-radius:16px;border:1px solid var(--border-color);background:rgba(255,255,255,0.05);color:var(--text-main);resize:vertical}
+.new-message-box button{margin-top:0.85rem;padding:0.9rem 1.4rem;border-radius:14px;border:none;background:rgba(255,255,255,0.14);color:var(--text-main);cursor:pointer}

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import AstronomyDashboard from './features/foto-del-dia/pages/AstronomyDashboard'
 import LoginView from './features/auth/LoginView'
 import SearchView from './features/imagenes/pages/SearchView'
+import ForoPage from './features/foro/pages/ForoPage'
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState('dashboard') // 'dashboard' | 'login' | 'search' | 'favorites'
@@ -22,6 +23,10 @@ function App() {
 
       {currentScreen === 'favorites' && (
         <SearchView />
+      )}
+
+      {currentScreen === 'forum' && (
+        <ForoPage />
       )}
     </>
   )
