@@ -21,7 +21,7 @@ export default function AstronomyDashboard({ onNavigate }) {
         currentViewName="Foto del Día" 
         onNavigate={onNavigate}
       />
-      <SidebarMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      <SidebarMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} onNavigate={onNavigate} />
       <MainContent data={MOCK_DATA} />
       <CommentsPanel />
     </div>

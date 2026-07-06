@@ -30,7 +30,7 @@ export default function CommentsPanel() {
             placeholder="Escribe un comentario..." 
             className="custom-comment-input"
           />
-          <button className="submit-comment-btn">➔</button>
+          <button className="submit-comment-btn">Enviar</button>
         </div>
       </div>
     </section>

@@ -1,7 +1,7 @@
 import logoTelescopio from '../../../assets/logo-deepSky.png';
 import logoNombre from '../../../assets/logo-DeepSky-nombre.png';
 
-export default function SidebarMenu({ isOpen, onClose }) {
+export default function SidebarMenu({ isOpen, onClose, onNavigate }) {
   return (
     <aside
       className={`sidebar-overlay ${isOpen ? 'open' : ''}`}
@@ -15,17 +15,19 @@ export default function SidebarMenu({ isOpen, onClose }) {
             <img src={logoTelescopio} alt="Telescopio" className="logo-telescopio" />
             <img src={logoNombre} alt="DeepSky" className="logo-nombre" />
           </div>
-          <button className="close-sidebar-btn" onClick={onClose} aria-label="Cerrar menú">✕</button>
+          <button className="close-sidebar-btn" onClick={onClose} aria-label="Cerrar menú">Cerrar</button>
         </div>
-        
+
         <nav className="sidebar-nav-links">
-          <a href="#search" className="nav-item">🔍 Búsqueda</a>
-          <a href="#apod" className="nav-item active">📷 Foto del Día</a>
-          <a href="#forum" className="nav-item">👥 Foro Comunitario</a>
-          <a href="#events" className="nav-item">📅 Calendario de Eventos</a>
-          <a href="#challenge" className="nav-item">🏆 Reto Astronómico</a>
-          <a href="#neos" className="nav-item">☄️ Objetos NEOs</a>
-          <a href="#3d" className="nav-item">📦 Modelo 3D</a>
+          <button className="nav-item" onClick={() => { onNavigate && onNavigate('search'); onClose(); }}>Búsqueda</button>
+          <button className="nav-item active" onClick={() => { onNavigate && onNavigate('dashboard'); onClose(); }}>Foto del Día</button>
+          <button className="nav-item" onClick={() => { onNavigate && onNavigate('forum'); onClose(); }}>Foro Comunitario</button>
+          <button className="nav-item" onClick={() => { onNavigate && onNavigate('events'); onClose(); }}>Calendario</button>
+          <button className="nav-item" onClick={() => { onNavigate && onNavigate('challenge'); onClose(); }}>Retos</button>
+          <button className="nav-item" onClick={() => { onNavigate && onNavigate('neos'); onClose(); }}>NEOs</button>
+          <button className="nav-item" onClick={() => { onNavigate && onNavigate('3d'); onClose(); }}>Modelo 3D</button>
+          <hr />
+          <button className="nav-item" onClick={() => { onNavigate && onNavigate('favorites'); onClose(); }}>Favoritos</button>
         </nav>
       </div>
     </aside>
