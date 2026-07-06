@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import Navbar from './components/Navbar'
-import SidebarMenu from './components/SidebarMenu'
-import MainContent from './components/MainContent'
-import CommentsPanel from './components/CommentsPanel'
-import './Astronomy.css'
+import Navbar from '../components/Navbar'
+import SidebarMenu from '../components/SidebarMenu'
+import MainContent from '../components/MainContent'
+import CommentsPanel from '../components/CommentsPanel'
+import '../Astronomy.css'
 
 const MOCK_DATA = {
   title: "Los Anillos de Saturno — Sonda Cassini",
@@ -17,7 +17,7 @@ export default function AstronomyDashboard({ onNavigate }) {
   return (
     <div className="dashboard-layout">
       <Navbar 
-        onToggleMenu={() => setIsMenuOpen(true)} 
+        onToggleMenu={() => setIsMenuOpen(v => !v)} 
         currentViewName="Foto del Día" 
         onNavigate={onNavigate}
       />
