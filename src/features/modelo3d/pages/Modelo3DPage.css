@@ -1,0 +1,182 @@
+.modelo3d-page {
+  position: relative;
+  min-height: 100vh;
+  color: var(--text-main);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.modelo3d-page-inner {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.modelo3d-hero {
+  margin-bottom: 1.5rem;
+}
+
+.modelo3d-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 1.2rem;
+  align-items: start;
+}
+
+.solar-system-card,
+.planet-detail-card {
+  background: rgba(6, 8, 20, 0.76);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 24px;
+  padding: 1.2rem;
+  backdrop-filter: blur(10px);
+  max-height: 620px;
+  overflow-y: auto;
+}
+
+.solar-system-card {
+  position: relative;
+  min-height: 620px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.05), rgba(0,0,0,0.18));
+}
+
+.sun-core {
+  position: absolute;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffd166 0%, #f59e0b 60%, #b45309 100%);
+  box-shadow: 0 0 40px rgba(245, 158, 11, 0.35);
+}
+
+.planet-orbit {
+  position: absolute;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 50%;
+  width: var(--orbit);
+  height: var(--orbit);
+  animation: orbit-spin var(--duration) linear infinite;
+  background: transparent;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  pointer-events: none;
+}
+
+.planet-orbit.active {
+  border-color: rgba(125, 211, 252, 0.65);
+  box-shadow: 0 0 18px rgba(125, 211, 252, 0.18);
+}
+
+.planet-marker {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--planet-size);
+  height: var(--planet-size);
+  transform: translate(-50%, -50%);
+  border: none;
+  border-radius: 50%;
+  background: var(--planet-color);
+  box-shadow: 0 0 15px rgba(255,255,255,0.15);
+  cursor: pointer;
+  pointer-events: auto;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+  z-index: 2;
+}
+
+.planet-marker:hover {
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+.planet-marker.active {
+  outline: 2px solid rgba(125, 211, 252, 0.85);
+  outline-offset: 6px;
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+.planet-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.planet-preview {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  box-shadow: 0 0 16px rgba(255,255,255,0.16);
+}
+
+.planet-description {
+  color: #d8d1eb;
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+.curiosities-card {
+  padding: 1rem;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: 1rem;
+}
+
+.curiosities-card h3 {
+  margin: 0 0 0.6rem;
+  color: #ffffff;
+}
+
+.curiosities-card ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: #e2dcff;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.curiosity-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.curiosity-form textarea {
+  width: 100%;
+  min-height: 90px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.05);
+  color: var(--text-main);
+  padding: 0.9rem 1rem;
+  resize: vertical;
+}
+
+.curiosity-form button {
+  align-self: flex-start;
+  border: none;
+  padding: 0.8rem 1.1rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  color: white;
+  cursor: pointer;
+}
+
+@keyframes orbit-spin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@media (max-width: 980px) {
+  .modelo3d-layout {
+    grid-template-columns: 1fr;
+  }
+}
