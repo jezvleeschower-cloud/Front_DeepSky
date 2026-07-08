@@ -5,9 +5,10 @@ import SearchView from './features/imagenes/pages/SearchView'
 import ForoPage from './features/foro/pages/ForoPage'
 import CalendarioPage from './features/calendario/pages/CalendarioPage'
 import RetosPage from './features/retos/pages/RetosPage'
+import NeosPage from './features/neos/pages/NeosPage'
 
 function App() {
-  const [currentScreen, setCurrentScreen] = useState('dashboard') // 'dashboard' | 'login' | 'search' | 'favorites' | 'forum' | 'events' | 'challenge'
+  const [currentScreen, setCurrentScreen] = useState('dashboard') // 'dashboard' | 'login' | 'search' | 'favorites' | 'forum' | 'events' | 'challenge' | 'neos'
 
   return (
     <>
@@ -37,6 +38,10 @@ function App() {
 
       {currentScreen === 'challenge' && (
         <RetosPage onNavigate={setCurrentScreen} activeView="challenge" />
+      )}
+
+      {currentScreen === 'neos' && (
+        <NeosPage onNavigate={setCurrentScreen} activeView="neos" />
       )}
     </>
   )
