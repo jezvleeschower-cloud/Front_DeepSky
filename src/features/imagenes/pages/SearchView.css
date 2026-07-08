@@ -1,5 +1,7 @@
 /* Styles for SearchView per d.txt */
-.search-view{min-height:100vh;background-position:center;background-size:cover;padding:1.5rem}
+.search-view{position:relative;min-height:100vh;background-position:center;background-size:cover;padding:1.5rem}
+.search-menu-trigger{position:absolute;top:1.2rem;left:1.2rem;z-index:20;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.18);border-radius:12px;padding:0.72rem 0.8rem;cursor:pointer;box-shadow:0 10px 24px rgba(0,0,0,0.16)}
+.search-menu-trigger img{width:58px;height:58px;display:block}
 
 .search-module-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
 .left-controls img{height:36px}

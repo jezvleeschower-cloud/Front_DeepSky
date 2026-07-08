@@ -3,9 +3,10 @@ import AstronomyDashboard from './features/foto-del-dia/pages/AstronomyDashboard
 import LoginView from './features/auth/LoginView'
 import SearchView from './features/imagenes/pages/SearchView'
 import ForoPage from './features/foro/pages/ForoPage'
+import CalendarioPage from './features/calendario/pages/CalendarioPage'
 
 function App() {
-  const [currentScreen, setCurrentScreen] = useState('dashboard') // 'dashboard' | 'login' | 'search' | 'favorites'
+  const [currentScreen, setCurrentScreen] = useState('dashboard') // 'dashboard' | 'login' | 'search' | 'favorites' | 'forum' | 'events'
 
   return (
     <>
@@ -18,15 +19,19 @@ function App() {
       )}
 
       {currentScreen === 'search' && (
-        <SearchView />
+        <SearchView onNavigate={setCurrentScreen} />
       )}
 
       {currentScreen === 'favorites' && (
-        <SearchView />
+        <SearchView onNavigate={setCurrentScreen} />
       )}
 
       {currentScreen === 'forum' && (
-        <ForoPage />
+        <ForoPage onNavigate={setCurrentScreen} />
+      )}
+
+      {currentScreen === 'events' && (
+        <CalendarioPage onNavigate={setCurrentScreen} />
       )}
     </>
   )

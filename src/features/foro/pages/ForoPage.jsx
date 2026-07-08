@@ -3,6 +3,7 @@ import './ForoPage.css'
 import fondo5 from '../../../assets/fondo-5-DeepSks.png'
 import fondo8 from '../../../assets/fondo-8-DeepSks.png'
 import menuForo from '../../../assets/menu-foro.png'
+import SidebarMenu from '../../foto-del-dia/components/SidebarMenu'
 
 const MOCK_TOPICS = [
   { id: 't1', title: 'Descubrimientos recientes', posts: 12, lastActivity: 'Hace 2 horas' },
@@ -10,12 +11,24 @@ const MOCK_TOPICS = [
   { id: 't3', title: 'Telescopios recomendados para principiantes', posts: 23, lastActivity: 'Hace 30 min' }
 ]
 
-export default function ForoPage() {
+export default function ForoPage({ onNavigate }) {
   const [topics] = useState(MOCK_TOPICS)
   const [selectedTopic, setSelectedTopic] = useState(null)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
     <main className="foro-page" style={{ backgroundImage: `url(${selectedTopic ? fondo8 : fondo5})` }}>
+      <button className="forum-menu-trigger" onClick={() => setIsMenuOpen(true)} aria-label="Abrir menú">
+        <img src={menuForo} alt="Menú" />
+      </button>
+      <SidebarMenu
+        isOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        onNavigate={(screen) => {
+          if (onNavigate) onNavigate(screen)
+          setIsMenuOpen(false)
+        }}
+      />
       <div className="foro-page-inner">
         <section className="foro-hero">
           <div className="foro-menu-location">

@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react'
 import './SearchView.css'
 import ImageCard from '../../../components/common/ImageCard'
 import { favoritesService } from '../../../services/favoritesService'
+import SidebarMenu from '../../foto-del-dia/components/SidebarMenu'
 import fondo1 from '../../../assets/fondo-1-DeepSks.png'
 import fondo4 from '../../../assets/fondo-4-DeepSks.png'
 import menuLupa from '../../../assets/menu-lupa.png'
@@ -17,12 +18,13 @@ const MOCK_IMAGES = [
   { id: '4', title: 'Sistema Solar', author: 'NASA Hubble', category: 'Planetas', url: 'https://images-assets.nasa.gov/image/PIA03149/PIA03149~medium.jpg' }
 ]
 
-export default function SearchView(){
+export default function SearchView({ onNavigate }){
   const [activeTab, setActiveTab] = useState('busqueda')
   const [selectedCategory, setSelectedCategory] = useState('Todos')
   const [searchQuery, setSearchQuery] = useState('')
   const [favoritesList, setFavoritesList] = useState(() => favoritesService.getAll().map(i=>i.id))
   const [selectedImageDetail, setSelectedImageDetail] = useState(null)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const categories = ['Todos','Galaxias','Nebulosas','Planetas','Estrellas']
 
@@ -43,6 +45,17 @@ export default function SearchView(){
 
   return (
     <div className="search-view" style={{backgroundImage: selectedImageDetail ? `url(${fondo4})` : `url(${fondo1})`, backgroundSize: 'cover'}}>
+      <button className="search-menu-trigger" onClick={() => setIsMenuOpen(true)} aria-label="Abrir menú">
+        <img src={menuLupa} alt="Menú" />
+      </button>
+      <SidebarMenu
+        isOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        onNavigate={(screen) => {
+          if (onNavigate) onNavigate(screen)
+          setIsMenuOpen(false)
+        }}
+      />
       {selectedImageDetail ? (
         <div className="detail-view">
           <button onClick={()=>setSelectedImageDetail(null)}>Cerrar</button>
