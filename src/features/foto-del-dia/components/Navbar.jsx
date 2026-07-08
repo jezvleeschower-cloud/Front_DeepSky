@@ -15,10 +15,10 @@ export default function Navbar({ onToggleMenu, currentViewName, onNavigate }) {
       </div>
       <div className="nav-right-actions">
         <button className="icon-btn" onClick={() => onNavigate('search')} aria-label="Buscar">
-          Buscar
+          Explorar
         </button>
         <button className="account-btn" onClick={() => onNavigate('login')}>
-        👤 MI CUENTA
+          MI CUENTA
         </button>
       </div>
     </nav>

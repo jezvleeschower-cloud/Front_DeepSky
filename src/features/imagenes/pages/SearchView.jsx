@@ -18,7 +18,7 @@ const MOCK_IMAGES = [
   { id: '4', title: 'Sistema Solar', author: 'NASA Hubble', category: 'Planetas', url: 'https://images-assets.nasa.gov/image/PIA03149/PIA03149~medium.jpg' }
 ]
 
-export default function SearchView({ onNavigate }){
+export default function SearchView({ onNavigate, activeView }){
   const [activeTab, setActiveTab] = useState('busqueda')
   const [selectedCategory, setSelectedCategory] = useState('Todos')
   const [searchQuery, setSearchQuery] = useState('')
@@ -51,6 +51,7 @@ export default function SearchView({ onNavigate }){
       <SidebarMenu
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
+        activeView={activeView}
         onNavigate={(screen) => {
           if (onNavigate) onNavigate(screen)
           setIsMenuOpen(false)

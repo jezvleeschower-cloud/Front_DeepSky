@@ -11,7 +11,7 @@ const MOCK_TOPICS = [
   { id: 't3', title: 'Telescopios recomendados para principiantes', posts: 23, lastActivity: 'Hace 30 min' }
 ]
 
-export default function ForoPage({ onNavigate }) {
+export default function ForoPage({ onNavigate, activeView }) {
   const [topics] = useState(MOCK_TOPICS)
   const [selectedTopic, setSelectedTopic] = useState(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -24,6 +24,7 @@ export default function ForoPage({ onNavigate }) {
       <SidebarMenu
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
+        activeView={activeView}
         onNavigate={(screen) => {
           if (onNavigate) onNavigate(screen)
           setIsMenuOpen(false)

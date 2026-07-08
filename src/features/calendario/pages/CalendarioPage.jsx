@@ -22,7 +22,7 @@ function formatLabel(date) {
   return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
 }
 
-export default function CalendarioPage({ onNavigate }) {
+export default function CalendarioPage({ onNavigate, activeView }) {
   const [monthDate, setMonthDate] = useState(new Date(2026, 6, 1))
   const [selectedDate, setSelectedDate] = useState(new Date(2026, 6, 12))
   const [events, setEvents] = useState(INITIAL_EVENTS)
@@ -93,6 +93,7 @@ export default function CalendarioPage({ onNavigate }) {
       <SidebarMenu
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
+        activeView={activeView}
         onNavigate={(screen) => {
           if (onNavigate) onNavigate(screen)
           setIsMenuOpen(false)

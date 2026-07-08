@@ -1,10 +1,19 @@
+import { useState } from 'react'
 import logoTelescopio from '../../assets/logo-deepSky.png';
 import logoNombre from '../../assets/logo-DeepSky-nombre.png';
+import menuForo from '../../assets/menu-foro.png';
+import SidebarMenu from '../foto-del-dia/components/SidebarMenu';
 import './Auth.css'
 
 export default function LoginView({ onNavigate }) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
   return (
     <div className="auth-page-container">
+      <button className="login-menu-trigger" onClick={() => setIsMenuOpen(true)} aria-label="Abrir menú">
+        <img src={menuForo} alt="Menú" />
+      </button>
+      <SidebarMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} onNavigate={(screen) => { if (onNavigate) onNavigate(screen); setIsMenuOpen(false) }} activeView="login" />
       <header className="auth-header">
         <div className="auth-logo-wrapper" onClick={() => onNavigate('dashboard')} style={{cursor: 'pointer'}}>
           <img src={logoTelescopio} alt="Telescopio" className="auth-logo-ico" />
