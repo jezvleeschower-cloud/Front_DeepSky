@@ -5,12 +5,10 @@ export default function Navbar({ onToggleMenu, currentViewName, onNavigate }) {
   return (
     <nav className="navbar">
       <div className="nav-left">
-        {/* Contenedor para reservar el espacio físico del botón fixed */}
-        <div className="menu-trigger-container" style={{ width: '80px', height: '100%' }}>
-          <button className="menu-trigger-btn" onClick={onToggleMenu} aria-label="Abrir menú">
-            <img src={menuIcon} alt="Menú Principal" className="menu-icon-img" />
-          </button>
-        </div>
+        {/* Botón de menú integrado */}
+        <button className="menu-trigger-btn" onClick={onToggleMenu} aria-label="Abrir menú">
+          <img src={menuIcon} alt="Menú Principal" className="menu-icon-img" />
+        </button>
         
         <div className="brand-location">
           <span className="brand-text">DeepSky</span>
@@ -20,9 +18,7 @@ export default function Navbar({ onToggleMenu, currentViewName, onNavigate }) {
       </div>
       
       <div className="nav-right-actions">
-        <button className="icon-btn" onClick={() => onNavigate('search')} aria-label="Buscar">
-          Explorar
-        </button>
+        {/* SE ELIMINÓ EL BOTÓN "EXPLORAR" APLICANDO LA OBSERVACIÓN DEL PDF */}
         <button className="account-btn" onClick={() => onNavigate('login')}>
           MI CUENTA
         </button>
