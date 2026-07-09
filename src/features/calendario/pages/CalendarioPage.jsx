@@ -2,8 +2,10 @@
 import { useState } from 'react';
 import './CalendarioPage.css';
 import menuIcon from '../../../assets/menu-calendario.png';
+import SidebarMenu from '../../foto-del-dia/components/SidebarMenu';
 
-export default function CalendarioPage({ onToggleMenu, onNavigate }) {
+export default function CalendarioPage({ onNavigate, activeView = 'events' }) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date('2026-07-07'));
   const [currentDate, setCurrentDate] = useState(new Date(2026, 6, 1)); // Julio 2026
 
@@ -81,10 +83,19 @@ export default function CalendarioPage({ onToggleMenu, onNavigate }) {
 
   return (
     <div className="calendario-page-container">
+      <SidebarMenu
+        isOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        activeView={activeView}
+        onNavigate={(screen) => {
+          if (onNavigate) onNavigate(screen);
+          setIsMenuOpen(false);
+        }}
+      />
       
       <nav className="navbar-shared">
         <div className="nav-left-shared">
-          <button className="menu-btn-shared" onClick={onToggleMenu} aria-label="Abrir menú">
+          <button className="menu-btn-shared" onClick={() => setIsMenuOpen(true)} aria-label="Abrir menú">
             <img src={menuIcon} alt="Menú Calendario" className="menu-icon-shared" />
           </button>
           <div className="brand-location-shared">
