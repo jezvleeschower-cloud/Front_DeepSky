@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import './Modelo3DPage.css';
 import SidebarMenu from '../../foto-del-dia/components/SidebarMenu';
 import menuLupa from '../../../assets/menu-lupa.png';
+import { useEffect } from 'react';
+import useAuth from '../../../hooks/useAuth';
 
 const PLANETS_DATA = [
   { id: 1, name: 'Mercurio', color: '#a1a1a1', size: 10, rx: 50, ry: 20, duration: 4, description: 'El planeta más cercano al Sol, con temperaturas extremas y una superficie llena de cráteres.', curiosities: ['No tiene atmósfera.', 'Un año dura solo 88 días terrestres.'] },
@@ -14,8 +16,18 @@ const PLANETS_DATA = [
   { id: 8, name: 'Neptuno', color: '#3f51b5', size: 16, rx: 305, ry: 122, duration: 38, description: 'El planeta más distante del sistema solar, azotado por los vientos más fuertes y dinámicos del cosmos.', curiosities: ['Su color azul profundo se debe al metano atmosférico.', 'Fue descubierto mediante cálculos matemáticos antes de ser visto por telescopio.'] }
 ];
 
-export default function Modelo3DPage({ onNavigate, activeView }) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+export default function Modelo3DPage({ onNavigate, activeView }) { 
+const { isAuthenticated } = useAuth();
+const [isMenuOpen, setIsMenuOpen] = useState(false); 
+
+useEffect(() => {
+  if (!isAuthenticated) {
+    onNavigate && onNavigate('login');
+  }
+}, [isAuthenticated]);
+
+if (!isAuthenticated) {
+  return null;}
   const [selectedPlanet, setSelectedPlanet] = useState(PLANETS_DATA[2]); // Tierra por defecto
   const [curiosities, setCuriosities] = useState(PLANETS_DATA.reduce((acc, p) => ({ ...acc, [p.id]: p.curiosities }), {}));
   const [newCuriosity, setNewCuriosity] = useState('');
@@ -47,7 +59,7 @@ export default function Modelo3DPage({ onNavigate, activeView }) {
           </div>
         </div>
         <div className="nav-right-shared">
-          <button className="account-access" onClick={() => onNavigate && onNavigate('login')}>
+          <button className="account-access" onClick={() => onNavigate && onNavigate('account')}>
             MI CUENTA
           </button>
         </div>

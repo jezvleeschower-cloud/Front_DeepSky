@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import './NeosPage.css';
 import SidebarMenu from '../../foto-del-dia/components/SidebarMenu';
 import menuLupa from '../../../assets/menu-lupa.png';
-// 1. Importamos la imagen de fondo desde la carpeta assets
+import { useEffect } from 'react';
+import useAuth from '../../../hooks/useAuth';
 import fondoDeepSky from '../../../assets/fondo-5-DeepSks.png';
 
-// Datos estáticos de prueba de los Objetos Cercanos a la Tierra con coordenadas para la gráfica
+
 const MOCK_NEOS = [
   {
     id: '1', 
@@ -45,9 +46,20 @@ const MOCK_NEOS = [
   }
 ];
 
-export default function NeosPage({ onNavigate, activeView }) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [selectedNeo, setSelectedNeo] = useState(MOCK_NEOS[0]);
+export default function NeosPage({ onNavigate, activeView }) { 
+  const { isAuthenticated } = useAuth();
+  const [isMenuOpen, setIsMenuOpen] = useState(false); 
+  const [selectedNeo, setSelectedNeo] = useState(MOCK_NEOS[0]); 
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      onNavigate && onNavigate('login');
+    }
+  }, [isAuthenticated]);
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     // 2. Aplicamos el fondo dinámicamente usando estilos en línea
@@ -68,7 +80,7 @@ export default function NeosPage({ onNavigate, activeView }) {
           </div>
         </div>
         <div className="nav-right-shared">
-          <button className="account-access" onClick={() => onNavigate && onNavigate('login')}>
+          <button className="account-access" onClick={() => onNavigate && onNavigate('account')}>
             MI CUENTA
           </button>
         </div>

@@ -265,3 +265,87 @@
   from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }
 }
+.retos-hero {
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.retos-hero h2 {
+  background: linear-gradient(135deg, #ffffff, #c4b5fd);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
+
+/* Tarjetas del listado: más presencia y profundidad */
+.forum-challenge-card {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+.forum-challenge-card:hover {
+  box-shadow: 0 12px 32px rgba(124, 58, 237, 0.2);
+}
+
+.forum-badge-date {
+  background: rgba(124, 58, 237, 0.15);
+  color: #c4b5fd;
+  border: 1px solid rgba(167, 139, 250, 0.25);
+  font-weight: 600;
+}
+
+.action-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: gap 0.2s ease;
+}
+.forum-challenge-card:hover .action-link {
+  gap: 0.55rem;
+}
+
+/* Podio: destacar el primer lugar */
+.podium-card:first-child {
+  border-color: rgba(250, 204, 21, 0.35);
+  background: rgba(250, 204, 21, 0.06);
+}
+.podium-card:first-child .rank-badge {
+  background: #facc15;
+  color: #1a1400;
+  border-color: transparent;
+}
+
+/* Galería: hover sutil en las fotos */
+.gallery-item-card {
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.gallery-item-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.heart-btn {
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+.heart-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+.heart-btn:active {
+  transform: scale(0.95);
+}
+
+/* ==========================================
+   ESTADOS BLOQUEADOS (usuario invitado)
+   ========================================== */
+
+.create-challenge-btn-large.locked,
+.upload-participation-btn.locked,
+.heart-btn.locked {
+  opacity: 0.55;
+  cursor: pointer;
+  filter: grayscale(0.3);
+}
+.create-challenge-btn-large.locked:hover,
+.upload-participation-btn.locked:hover {
+  background: rgba(124, 58, 237, 0.15);
+  color: #c084fc;
+}
