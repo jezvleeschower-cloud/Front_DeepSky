@@ -1,107 +1,151 @@
-import { useState } from 'react';
-import fondo1 from '../../../assets/fondo-1-DeepSks.png';
-import menuAstro from '../../../assets/menu-astroFoto.png';
-import SidebarMenu from '../../foto-del-dia/components/SidebarMenu';
-import '../../foto-del-dia/Astronomy.css';
+import React, { useState } from 'react';
 import './RetosPage.css';
+import SidebarMenu from '../../foto-del-dia/components/SidebarMenu';
+import menuLupa from '../../../assets/menu-lupa.png';
+import fondo from '../../../assets/fondo-8-DeepSks.png';
 
 const INITIAL_EVENTS = [
   {
     id: 1,
     title: 'Reto de Astrofotografía: Luna y cielo nocturno',
     description: 'Captura la luna con detalles y comparte tu mejor toma del cielo nocturno.',
-    deadline: '20/07/2026',
-    creator: 'Marta',
-    entries: [
-      { id: 1, author: 'LunaX', likes: 42, title: 'Cielo de verano', image: 'https://images-assets.nasa.gov/image/PIA11667/PIA11667~medium.jpg' },
-      { id: 2, author: 'Niko', likes: 39, title: 'Luz lunar', image: 'https://images-assets.nasa.gov/image/PIA16322/PIA16322~medium.jpg' },
-      { id: 3, author: 'Sofía', likes: 35, title: 'Brillo nocturno', image: 'https://images-assets.nasa.gov/image/PIA22194/PIA22194~medium.jpg' }
+    author: 'Marta',
+    date: 'Hasta 20/07/2026',
+    imageUrl: 'https://images.unsplash.com/photo-1522030299830-16b8d3d049fe?w=600', 
+    topEntries: [
+      { id: 't1', title: 'Luz lunar', user: 'Niko', likes: 42, url: 'https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?w=500' },
+      { id: 't2', title: 'Cielo de verano', user: 'LunaX', likes: 38, url: 'https://images.unsplash.com/photo-1532960401447-7dd05bef20b0?w=500' },
+      { id: 't3', title: 'Brillo nocturno', user: 'Sofia', likes: 25, url: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=500' }
+    ],
+    userGallery: [
+      { id: 'g1', title: 'Luz lunar', user: 'Niko', likes: 42, url: 'https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?w=500' },
+      { id: 'g2', title: 'Cielo de verano', user: 'LunaX', likes: 38, url: 'https://images.unsplash.com/photo-1532960401447-7dd05bef20b0?w=500' },
+      { id: 'g3', title: 'Brillo nocturno', user: 'Sofia', likes: 25, url: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=500' }
     ]
   },
   {
     id: 2,
     title: 'Reto de Nebulosas',
-    description: 'Muestra una nebulosa en una composición elegante y bien expuesta.',
-    deadline: '05/08/2026',
-    creator: 'Dario',
-    entries: [
-      { id: 4, author: 'Ari', likes: 29, title: 'Nebulosa azul', image: 'https://images-assets.nasa.gov/image/GSFC_20171208_Archive_e000172/GSFC_20171208_Archive_e000172~medium.jpg' },
-      { id: 5, author: 'Mina', likes: 24, title: 'Polvo cósmico', image: 'https://images-assets.nasa.gov/image/PIA12348/PIA12348~medium.jpg' }
-    ]
+    description: 'Enfoca las estructuras de gas profundo en el espacio exterior y destaca las tonalidades de hidrógeno.',
+    author: 'Dario',
+    date: 'Hasta 15/08/2026',
+    imageUrl: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=600',
+    topEntries: [],
+    userGallery: []
   }
 ];
 
-export default function RetosPage({ onNavigate, activeView = 'challenge' }) {
+export default function RetosPage({ onNavigate, activeView }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [events, setEvents] = useState(INITIAL_EVENTS);
-  const [selectedEvent, setSelectedEvent] = useState(INITIAL_EVENTS[0]);
-  const [form, setForm] = useState({ title: '', description: '', deadline: '' });
-  const [entryForm, setEntryForm] = useState({ title: '', image: '' });
+  const [selectedEvent, setSelectedEvent] = useState(null); 
 
-  const handleCreateEvent = (e) => {
-    e.preventDefault();
-    if (!form.title || !form.description || !form.deadline) return;
+  // Estados de los modales
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showUploadModal, setShowUploadModal] = useState(false);
 
-    const newEvent = {
-      id: Date.now(),
-      title: form.title,
-      description: form.description,
-      deadline: form.deadline,
-      creator: 'Tú',
-      entries: []
-    };
+  // Estados para formularios
+  const [newChallenge, setNewChallenge] = useState({ title: '', description: '', date: 'Hasta 30/08/2026' });
+  const [challengeFile, setChallengeFile] = useState(null); 
+  
+  const [newParticipation, setNewParticipation] = useState({ title: '' });
+  const [selectedFile, setSelectedFile] = useState(null); 
 
-    setEvents([newEvent, ...events]);
-    setSelectedEvent(newEvent);
-    setForm({ title: '', description: '', deadline: '' });
-  };
+  const handleLike = (photoId) => {
+    const updatedEvents = events.map(evt => {
+      if (evt.id !== selectedEvent.id) return evt;
+      
+      const updatedGallery = evt.userGallery.map(img => 
+        img.id === photoId ? { ...img, likes: img.likes + 1 } : img
+      );
 
-  const rankedEntries = [...(selectedEvent?.entries || [])].sort((a, b) => b.likes - a.likes).slice(0, 3);
+      const updatedTop = [...updatedGallery]
+        .sort((a, b) => b.likes - a.likes)
+        .slice(0, 3);
 
-  const handleCreateEntry = (e) => {
-    e.preventDefault();
-    if (!entryForm.title || !entryForm.image) return;
-
-    const newEntry = {
-      id: Date.now(),
-      author: 'Tú',
-      likes: 0,
-      title: entryForm.title,
-      image: entryForm.image
-    };
-
-    const updatedEvents = events.map((event) =>
-      event.id === selectedEvent?.id
-        ? { ...event, entries: [newEntry, ...(event.entries || [])] }
-        : event
-    );
-
-    setEvents(updatedEvents);
-    setSelectedEvent(updatedEvents.find((event) => event.id === selectedEvent?.id));
-    setEntryForm({ title: '', image: '' });
-  };
-
-  const handleLike = (entryId) => {
-    const updatedEvents = events.map((event) => {
-      if (event.id !== selectedEvent?.id) return event;
-
-      return {
-        ...event,
-        entries: event.entries.map((entry) =>
-          entry.id === entryId ? { ...entry, likes: entry.likes + 1 } : entry
-        )
-      };
+      return { ...evt, userGallery: updatedGallery, topEntries: updatedTop };
     });
 
     setEvents(updatedEvents);
-    setSelectedEvent(updatedEvents.find((event) => event.id === selectedEvent?.id));
+    setSelectedEvent(updatedEvents.find(e => e.id === selectedEvent.id));
+  };
+
+  const submitCreateChallenge = (e) => {
+    e.preventDefault();
+    if (!newChallenge.title || !newChallenge.description || !challengeFile) return;
+
+    const challengeImgUrl = URL.createObjectURL(challengeFile);
+
+    const created = {
+      id: Date.now(),
+      title: newChallenge.title,
+      description: newChallenge.description,
+      author: 'Tú',
+      date: newChallenge.date,
+      imageUrl: challengeImgUrl, 
+      topEntries: [],
+      userGallery: []
+    };
+
+    setEvents([created, ...events]);
+    setSelectedEvent(created); 
+    setNewChallenge({ title: '', description: '', date: 'Hasta 30/08/2026' });
+    setChallengeFile(null);
+    setShowCreateModal(false);
+  };
+
+  const submitParticipation = (e) => {
+    e.preventDefault();
+    if (!newParticipation.title || !selectedFile) return;
+
+    const objectUrl = URL.createObjectURL(selectedFile);
+
+    const updatedEvents = events.map(evt => {
+      if (evt.id !== selectedEvent.id) return evt;
+
+      const newPhoto = {
+        id: Date.now(),
+        title: newParticipation.title,
+        user: 'Tú',
+        likes: 0,
+        url: objectUrl
+      };
+
+      const updatedGallery = [newPhoto, ...evt.userGallery];
+      const updatedTop = [...updatedGallery].sort((a, b) => b.likes - a.likes).slice(0, 3);
+
+      return { ...evt, userGallery: updatedGallery, topEntries: updatedTop };
+    });
+
+    setEvents(updatedEvents);
+    setSelectedEvent(updatedEvents.find(e => e.id === selectedEvent.id));
+    setNewParticipation({ title: '' });
+    setSelectedFile(null);
+    setShowUploadModal(false);
   };
 
   return (
-    <main className="retos-page" style={{ backgroundImage: `url(${fondo1})` }}>
-      <button className="forum-menu-trigger" onClick={() => setIsMenuOpen(true)} aria-label="Abrir menú">
-        <img src={menuAstro} alt="Menú" />
-      </button>
+    /* Cambiado: Clase de fondo fondo-8-DeepSks asignada */
+    <div className="retos-page fondo-8-DeepSks">
+      
+      <nav className="navbar-shared">
+        <div className="nav-left-shared">
+          <button className="menu-btn-shared" onClick={() => setIsMenuOpen(true)} aria-label="Abrir menú">
+            <img src={menuLupa} alt="Menú Principal" className="menu-icon-shared" />
+          </button>
+          <div className="brand-location-shared">
+            <span className="brand-text-shared">DeepSky</span>
+            <span className="separator-shared">|</span>
+            <span className="location-text-shared">RETOS / ASTROFOTOGRAFÍA</span>
+          </div>
+        </div>
+        <div className="nav-right-shared">
+          <button className="account-access" onClick={() => onNavigate && onNavigate('login')}>
+            MI CUENTA
+          </button>
+        </div>
+      </nav>
+
       <SidebarMenu
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
@@ -112,121 +156,200 @@ export default function RetosPage({ onNavigate, activeView = 'challenge' }) {
         }}
       />
 
-      <div className="foro-page-inner retos-page-inner">
-        <section className="foro-hero retos-hero">
-          <div className="foro-menu-location">
-            <img src={menuAstro} alt="Retos" />
-            <span>Retos / Astrofotografía</span>
-          </div>
-          <h1>Retos de Astrofotografía</h1>
-          <p>Crea eventos, comparte tus mejores fotos y descubre las tomas más valoradas por la comunidad.</p>
-        </section>
+      <main className="retos-page-inner">
+        <header className="retos-hero">
+          <h2>Retos de Astrofotografía</h2>
+          <p>Participa en los eventos activos de la comunidad, sube tus capturas y vota por tus favoritas.</p>
+        </header>
 
-        <section className="retos-create-card">
-          <h2>Crear un nuevo reto</h2>
-          <form onSubmit={handleCreateEvent} className="reto-form">
-            <input
-              type="text"
-              placeholder="Título del evento"
-              value={form.title}
-              onChange={(e) => setForm({ ...form, title: e.target.value })}
-            />
-            <textarea
-              placeholder="Breve descripción del evento"
-              value={form.description}
-              onChange={(e) => setForm({ ...form, description: e.target.value })}
-            />
-            <input
-              type="text"
-              placeholder="Tiempo límite (ej. 20/07/2026)"
-              value={form.deadline}
-              onChange={(e) => setForm({ ...form, deadline: e.target.value })}
-            />
-            <button type="submit">Publicar reto</button>
-          </form>
-        </section>
+        {!selectedEvent ? (
+          <section className="forum-list-view">
+            <div className="forum-list-header">
+              <h3>Eventos creados</h3>
+              <button className="create-challenge-btn-large" onClick={() => setShowCreateModal(true)}>
+                + Crear un nuevo reto
+              </button>
+            </div>
 
-        <section className="retos-main-grid">
-          <div className="retos-sidebar">
-            <h3>Eventos creados</h3>
-            <div className="retos-list">
-              {events.map((event) => (
-                <button key={event.id} className={`reto-event-card ${selectedEvent?.id === event.id ? 'active' : ''}`} onClick={() => setSelectedEvent(event)}>
-                  <strong>{event.title}</strong>
-                  <span>Hasta {event.deadline}</span>
-                </button>
+            <div className="forum-grid-stack">
+              {events.map((evt) => (
+                <article key={evt.id} className="forum-challenge-card" onClick={() => setSelectedEvent(evt)}>
+                  {evt.imageUrl && (
+                    <div className="forum-card-cover">
+                      <img src={evt.imageUrl} alt={evt.title} />
+                    </div>
+                  )}
+                  <div className="forum-card-body">
+                    <div className="card-top">
+                      <span className="forum-badge-date">{evt.date}</span>
+                      <h4>{evt.title}</h4>
+                      <p>{evt.description.substring(0, 110)}...</p>
+                    </div>
+                    <div className="card-bottom">
+                      <span className="author-tag">Por {evt.author}</span>
+                      <span className="action-link">Ver reto e inscripciones →</span>
+                    </div>
+                  </div>
+                </article>
               ))}
             </div>
-          </div>
+          </section>
+        ) : (
+          <section className="challenge-focus-card animation-fade-in">
+            <div className="back-bar">
+              <button className="back-forum-btn" onClick={() => setSelectedEvent(null)}>
+                ← Volver al listado de retos
+              </button>
+            </div>
 
-          <div className="retos-content">
-            <div className="reto-detail-card">
-              <div className="reto-detail-header">
-                <div>
-                  <p className="retos-eyebrow">Evento activo</p>
-                  <h2>{selectedEvent?.title}</h2>
+            <div className="focus-card-header">
+              <div>
+                <span className="status-eyebrow">EVENTO ACTIVO</span>
+                <h2>{selectedEvent.title}</h2>
+                <p className="event-credits">
+                  Creado por {selectedEvent.author} • <span className="date-highlight">{selectedEvent.date}</span>
+                </p>
+              </div>
+              
+              <button className="upload-participation-btn" onClick={() => setShowUploadModal(true)}>
+                Subir tu participación
+              </button>
+            </div>
+
+            <p className="event-full-description">{selectedEvent.description}</p>
+
+            {/* Top 3 */}
+            {selectedEvent.topEntries.length > 0 && (
+              <div className="top-podium-section">
+                <h3>Top 3 más valoradas</h3>
+                <div className="podium-grid">
+                  {selectedEvent.topEntries.map((entry, idx) => (
+                    <div key={`top-${entry.id}`} className="podium-card">
+                      <div className="rank-badge">#{idx + 1}</div>
+                      <div className="podium-img-wrapper">
+                        <img src={entry.url} alt={entry.title} />
+                      </div>
+                      <div className="podium-info">
+                        <h4>{entry.title}</h4>
+                        <p>por {entry.user}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <span className="reto-badge">{selectedEvent?.deadline}</span>
               </div>
-              <p>{selectedEvent?.description}</p>
-              <p className="reto-meta">Creado por {selectedEvent?.creator}</p>
-            </div>
+            )}
 
-            <div className="upload-card">
-              <h3>Subir tu participación</h3>
-              <form onSubmit={handleCreateEntry} className="reto-form compact-form">
-                <input
-                  type="text"
-                  placeholder="Título de tu foto"
-                  value={entryForm.title}
-                  onChange={(e) => setEntryForm({ ...entryForm, title: e.target.value })}
-                />
-                <input
-                  type="text"
-                  placeholder="URL de la imagen"
-                  value={entryForm.image}
-                  onChange={(e) => setEntryForm({ ...entryForm, image: e.target.value })}
-                />
-                <button type="submit">Subir foto</button>
-              </form>
-            </div>
-
-            <div className="ranking-card">
-              <h3>Top 3 más valoradas</h3>
-              <div className="ranking-list">
-                {rankedEntries.map((entry, index) => (
-                  <article key={entry.id} className="ranking-item">
-                    <div className="ranking-position">#{index + 1}</div>
-                    <img src={entry.image} alt={entry.title} />
-                    <div>
-                      <h4>{entry.title}</h4>
-                      <p>{entry.author}</p>
-                    </div>
-                    <button className="heart-btn" onClick={() => handleLike(entry.id)}>❤ {entry.likes}</button>
-                  </article>
-                ))}
-              </div>
-            </div>
-
-            <div className="gallery-card">
+            {/* Galería */}
+            <div className="gallery-section">
               <h3>Fotos subidas por los usuarios</h3>
-              <div className="gallery-grid">
-                {(selectedEvent?.entries || []).map((entry) => (
-                  <article key={entry.id} className="gallery-item">
-                    <img src={entry.image} alt={entry.title} />
-                    <div className="gallery-info">
-                      <strong>{entry.title}</strong>
-                      <span>{entry.author}</span>
-                      <p>❤ {entry.likes}</p>
-                    </div>
-                    <button className="heart-btn small" onClick={() => handleLike(entry.id)}>Dar corazón</button>
-                  </article>
-                ))}
-              </div>
+              {selectedEvent.userGallery.length > 0 ? (
+                <div className="gallery-grid">
+                  {selectedEvent.userGallery.map((entry) => (
+                    <article key={entry.id} className="gallery-item-card">
+                      <div className="item-img-container">
+                        <img src={entry.url} alt={entry.title} />
+                      </div>
+                      <div className="item-footer">
+                        <div className="item-meta">
+                          <h4>{entry.title}</h4>
+                          <p>{entry.user}</p>
+                        </div>
+                        <button className="heart-btn" onClick={() => handleLike(entry.id)}>
+                          ❤ <span className="like-counter">{entry.likes}</span>
+                        </button>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              ) : (
+                <div className="empty-gallery-fallback">
+                  <p>Aún no hay participaciones. ¡Sé el primero en subir tu foto seleccionada!</p>
+                </div>
+              )}
             </div>
+          </section>
+        )}
+      </main>
+
+      {/* MODAL: Crear nuevo reto */}
+      {showCreateModal && (
+        <div className="modal-overlay" onClick={() => setShowCreateModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h3>Crear un nuevo reto</h3>
+            <form onSubmit={submitCreateChallenge} className="modal-form">
+              <div className="form-group">
+                <label>Título del reto</label>
+                <input 
+                  type="text" 
+                  placeholder="Ej. Reto de Cúmulos Estelares"
+                  value={newChallenge.title}
+                  onChange={(e) => setNewChallenge({...newChallenge, title: e.target.value})}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Descripción</label>
+                <textarea 
+                  placeholder="Describe los requisitos técnicos..."
+                  value={newChallenge.description}
+                  onChange={(e) => setNewChallenge({...newChallenge, description: e.target.value})}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Imagen de referencia / Portada</label>
+                <input 
+                  type="file" 
+                  accept="image/*"
+                  onChange={(e) => setChallengeFile(e.target.files[0])}
+                  className="file-input-custom"
+                  required
+                />
+              </div>
+              <div className="modal-actions">
+                <button type="button" className="btn-secondary" onClick={() => setShowCreateModal(false)}>Cancelar</button>
+                <button type="submit" className="btn-primary">Publicar reto</button>
+              </div>
+            </form>
           </div>
-        </section>
-      </div>
-    </main>
+        </div>
+      )}
+
+      {/* MODAL: Subir participación */}
+      {showUploadModal && (
+        <div className="modal-overlay" onClick={() => setShowUploadModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h3>Subir tu participación</h3>
+            <form onSubmit={submitParticipation} className="modal-form">
+              <div className="form-group">
+                <label>Título de la fotografía</label>
+                <input 
+                  type="text" 
+                  placeholder="Ej. Vía Láctea desde el hemisferio sur"
+                  value={newParticipation.title}
+                  onChange={(e) => setNewParticipation({...newParticipation, title: e.target.value})}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Selecciona tu fotografía</label>
+                <input 
+                  type="file" 
+                  accept="image/*"
+                  onChange={(e) => setSelectedFile(e.target.files[0])}
+                  className="file-input-custom"
+                  required
+                />
+              </div>
+              <div className="modal-actions">
+                <button type="button" className="btn-secondary" onClick={() => setShowUploadModal(false)}>Cancelar</button>
+                <button type="submit" className="btn-primary">Subir foto</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+    </div>
   );
 }

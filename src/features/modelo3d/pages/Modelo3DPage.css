@@ -1,4 +1,16 @@
 /* Estructura General de la Página */
+/* Cambiado: Fondo adaptado con la imagen fondo-8-DeepSks de assets */
+.modelo3d-page {
+  position: relative;
+  min-height: 100vh;
+  color: #ffffff;
+  background-image: url('../../../assets/fondo-8-DeepSks.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
 .modelo3d-page {
   position: relative;
   min-height: 100vh;
