@@ -477,3 +477,14 @@
     justify-content: space-between;
   }
 }
+
+.create-topic-btn.locked,
+.send-message-btn.locked {
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+.new-message-form-box textarea:disabled {
+  opacity: 0.5;
+  cursor: pointer;
+}
