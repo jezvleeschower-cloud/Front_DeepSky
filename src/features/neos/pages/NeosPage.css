@@ -1,261 +1,355 @@
+/* Estilos globales del módulo de Objetos Cercanos a la Tierra (NEOs) */
 .neos-page {
   position: relative;
   min-height: 100vh;
-  color: var(--text-main);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  color: #ffffff;
+  background-color: #0b081e;
 }
 
-.neos-page-inner {
-  padding: 2rem;
-  max-width: 1300px;
+/* Navbar Compartido Oficial DeepSky */
+.navbar-shared {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background: rgba(15, 11, 44, 0.6);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  z-index: 100;
+}
+
+.nav-left-shared { display: flex; align-items: center; gap: 1.5rem; }
+.menu-btn-shared { 
+  display: flex; align-items: center; justify-content: center;
+  width: 64px; height: 64px; background: rgba(255, 255, 255, 0.09); 
+  border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 16px;
+  cursor: pointer; transition: background 0.2s;
+}
+.menu-btn-shared:hover { background: rgba(255, 255, 255, 0.16); }
+.menu-icon-shared { width: 36px; height: 36px; display: block; }
+.brand-location-shared { display: flex; align-items: center; gap: 0.75rem; }
+.brand-text-shared { font-weight: 700; font-size: 1.35rem; letter-spacing: 1px; color: #ffffff; }
+.separator-shared { color: rgba(255, 255, 255, 0.3); }
+.location-text-shared { color: rgba(255, 255, 255, 0.75); font-size: 0.95rem; letter-spacing: 1px; }
+
+.account-access {
+  background: linear-gradient(135deg, #7c3aed, #4f46e5); 
+  border: none; 
+  color: #ffffff; 
+  padding: 0.65rem 1.5rem; 
+  border-radius: 999px; 
+  cursor: pointer; 
+  font-weight: 600; 
+  transition: all 0.3s;
+}
+.account-access:hover { 
+  background: linear-gradient(135deg, #8b5cf6, #6366f1); 
+  box-shadow: 0 0 15px rgba(108, 66, 202, 0.35); 
+}
+
+/* Envoltura de Contenido */
+.neos-content-wrapper {
+  padding: 120px 2rem 2rem 2rem;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
-.neos-hero {
+.neos-hero-section {
+  margin-bottom: 2rem;
+}
+.neos-hero-section h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.neos-hero-section p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.05rem;
+}
+
+/* Grid de distribución */
+.neos-dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 1024px) {
+  .neos-dashboard-grid { grid-template-columns: 1fr; }
+}
+
+.neos-visual-panel, .neos-details-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.radar-card, .anomaly-chart-card, .neo-data-card {
+  background: rgba(20, 16, 49, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 1.5rem;
+  backdrop-filter: blur(12px);
+}
+
+.radar-card h3, .anomaly-chart-card h3, .neo-data-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.5px;
+}
+
+.radar-instruction {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
   margin-bottom: 1.5rem;
 }
 
-.neos-grid {
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 1.2rem;
-  align-items: start;
-}
-
-.neos-radar-panel,
-.neos-detail-card {
-  background: rgba(6, 8, 20, 0.74);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 22px;
-  padding: 1.2rem;
-  backdrop-filter: blur(10px);
-}
-
-.neos-radar-panel {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-}
-
-.radar-caption {
-  color: var(--text-muted);
-  text-align: center;
-  margin: 0;
-}
-
-.neos-detail-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.neos-risk {
-  padding: 0.45rem 0.8rem;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: 700;
-}
-
-.neos-risk.danger {
-  background: rgba(248, 113, 113, 0.18);
-  color: #fecaca;
-}
-
-.neos-risk.safe {
-  background: rgba(74, 222, 128, 0.18);
-  color: #dcfce7;
-}
-
-.neos-highlight-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.8rem;
-  margin-bottom: 1rem;
-}
-
-.neos-metric {
-  padding: 0.9rem 1rem;
-  border-radius: 16px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.08);
-}
-
-.neos-metric span {
-  display: block;
-  color: var(--text-muted);
-  font-size: 0.8rem;
-  margin-bottom: 0.35rem;
-}
-
-.neos-metric strong {
-  color: #ffffff;
-}
-
-.neos-description {
-  color: #d8d1eb;
-  line-height: 1.7;
-  margin-bottom: 1rem;
-}
-
-.neos-activity-card {
-  padding: 1rem;
-  border-radius: 16px;
-  background: rgba(99, 102, 241, 0.12);
-  border: 1px solid rgba(129, 140, 248, 0.22);
-}
-
-.neos-activity-card h3 {
-  margin: 0 0 0.4rem;
-  color: #ffffff;
-}
-
-.neos-activity-card p {
-  margin: 0;
-  color: #e2dcff;
-  line-height: 1.6;
-}
-
-.neos-radar-card {
-  margin-top: 1rem;
-  padding: 1rem;
-  border-radius: 16px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-}
-
-.neos-radar-card h3 {
-  margin: 0 0 0.8rem;
-  color: #ffffff;
-}
-
-.radar-scope {
+/* INTERFAZ DEL RADAR */
+.radar-screen {
   position: relative;
-  width: 320px;
-  height: 320px;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-width: 380px;
   margin: 0 auto;
+  background: radial-gradient(circle, #091c13 0%, #030a07 100%);
+  border: 2px solid #10b981;
   border-radius: 50%;
-  border: 1px solid rgba(129, 140, 248, 0.35);
-  background:
-    radial-gradient(circle at center, rgba(14, 165, 233, 0.12) 0%, rgba(15, 23, 42, 0.1) 35%, rgba(2, 6, 23, 0.96) 100%);
   overflow: hidden;
-  box-shadow: inset 0 0 35px rgba(56, 189, 248, 0.18), 0 0 40px rgba(37, 99, 235, 0.2);
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
 }
 
-.radar-scope::before {
-  content: '';
+.radar-circle {
   position: absolute;
-  inset: 10px;
-  border-radius: 50%;
-  border: 1px solid rgba(255,255,255,0.08);
-}
-
-.radar-grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    radial-gradient(circle, rgba(255,255,255,0.12) 1px, transparent 1px),
-    linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
-  background-size: 24px 24px, 48px 48px, 48px 48px;
-  opacity: 0.45;
-}
-
-.radar-line {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(130deg, transparent 0%, rgba(34, 211, 238, 0.6) 45%, transparent 100%);
-  transform-origin: center;
-  animation: radar-spin 2.6s linear infinite;
-  filter: blur(0.5px);
-}
-
-.radar-blip {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  background: radial-gradient(circle, #fef3c7 0%, #facc15 60%, #b45309 100%);
-  border-radius: 50%;
-  border: none;
-  box-shadow: 0 0 14px #facc15;
-  animation: blip-pulse 1.4s ease-in-out infinite;
-  cursor: pointer;
-}
-
-.radar-blip.selected {
-  transform: scale(1.25);
-  box-shadow: 0 0 20px #38bdf8;
-  background: radial-gradient(circle, #e0f2fe 0%, #38bdf8 60%, #0284c7 100%);
-}
-
-.radar-center {
-  position: absolute;
-  inset: 50% auto auto 50%;
-  width: 20px;
-  height: 20px;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
+  border: 1px dashed rgba(16, 185, 129, 0.3);
   border-radius: 50%;
-  background: radial-gradient(circle, #bae6fd 0%, #38bdf8 70%, #0284c7 100%);
-  box-shadow: 0 0 18px #38bdf8;
+}
+.circle-1 { width: 30%; height: 30%; }
+.circle-2 { width: 60%; height: 60%; }
+.circle-3 { width: 90%; height: 90%; }
+
+.radar-cross-x, .radar-cross-y {
+  position: absolute;
+  background: rgba(16, 185, 129, 0.2);
+}
+.radar-cross-x { top: 50%; left: 0; width: 100%; height: 1px; }
+.radar-cross-y { left: 50%; top: 0; width: 1px; height: 100%; }
+
+.radar-sweep {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: conic-gradient(from 0deg, rgba(16, 185, 129, 0.3) 0deg, transparent 90deg);
+  border-radius: 50%;
+  animation: radarSweepAnimation 4s linear infinite;
+  transform-origin: center;
 }
 
-@keyframes radar-spin {
+@keyframes radarSweepAnimation {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
-@keyframes blip-pulse {
-  0%, 100% { transform: scale(0.95); opacity: 0.9; }
-  50% { transform: scale(1.15); opacity: 1; }
+.radar-earth-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  background: radial-gradient(circle, #3b82f6 40%, #1e3a8a 100%);
+  border: 2px solid #60a5fa;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.8);
+  z-index: 15;
 }
 
-.neos-timeline-card {
-  margin-top: 1rem;
-  padding: 1rem;
-  border-radius: 16px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
+.radar-dot {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background-color: #ef4444;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px #ef4444;
+  transition: transform 0.2s;
+  z-index: 10;
+}
+.radar-dot:hover, .radar-dot.active {
+  transform: translate(-50%, -50%) scale(1.3);
+  background-color: #f59e0b;
 }
 
-.neos-timeline-card h3 {
-  margin: 0 0 0.8rem;
-  color: #ffffff;
+/* INTERFAZ DE LA GRÁFICA DE PUNTOS CARTESIANA */
+.neo-scatter-plot {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  background: rgba(5, 3, 20, 0.6);
+  border-left: 2px solid rgba(255, 255, 255, 0.4);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.4);
+  margin-top: 1.5rem;
+  overflow: hidden;
 }
 
-.neos-timeline {
+/* Líneas de cuadrícula */
+.plot-grid-line {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.05);
+}
+.grid-v-25 { left: 25%; top: 0; width: 1px; height: 100%; }
+.grid-v-50 { left: 50%; top: 0; width: 1px; height: 100%; dashed; }
+.grid-v-75 { left: 75%; top: 0; width: 1px; height: 100%; }
+.grid-h-25 { bottom: 25%; left: 0; width: 100%; height: 1px; }
+.grid-h-50 { bottom: 50%; left: 0; width: 100%; height: 1px; }
+.grid-h-75 { bottom: 75%; left: 0; width: 100%; height: 1px; }
+
+/* Etiquetas de Ejes */
+.axis-label {
+  position: absolute;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+.axis-y-label {
+  top: 8px;
+  left: 8px;
+  transform: rotate(0deg);
+}
+.axis-x-label {
+  bottom: 8px;
+  right: 8px;
+}
+
+/* Contenedor y diseño del punto de la gráfica */
+.plot-point-wrapper {
+  position: absolute;
+  transform: translate(-50%, 50%);
   display: flex;
-  gap: 0.7rem;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
 }
 
-.timeline-step {
-  flex: 1;
-  min-width: 110px;
-  padding: 0.7rem;
+.plot-point {
+  width: 14px;
+  height: 14px;
+  background: #3b82f6;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+  transition: all 0.2s ease-in-out;
+}
+
+.plot-point:hover {
+  transform: scale(1.3);
+  background: #a78bfa;
+  box-shadow: 0 0 12px #a78bfa;
+}
+
+.plot-point-name {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 4px;
+  white-space: nowrap;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 1px 4px;
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+/* Punto seleccionado de forma activa */
+.selected-point .plot-point {
+  background: #ef4444;
+  border-color: #ffffff;
+  transform: scale(1.35);
+  box-shadow: 0 0 16px #ef4444;
+}
+.selected-point .plot-point-name {
+  color: #ef4444;
+  font-weight: 700;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* DETALLES Y MÉTRICAS */
+.tracking-badge {
+  display: inline-block;
+  background: rgba(124, 58, 237, 0.2);
+  border: 1px solid #7c3aed;
+  color: #a78bfa;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.neo-name-heading {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.5px;
+}
+
+.neo-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.stat-box {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  color: var(--text-muted);
+  padding: 1rem;
 }
 
-.timeline-step.active {
-  background: rgba(99, 102, 241, 0.16);
-  border-color: rgba(129, 140, 248, 0.34);
-  color: #e2dcff;
+.full-width-stat {
+  margin-bottom: 1.5rem;
 }
 
-.timeline-step span {
+.stat-title {
   display: block;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
   margin-bottom: 0.25rem;
 }
 
-@media (max-width: 980px) {
-  .neos-grid {
-    grid-template-columns: 1fr;
-  }
+.stat-number {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.anomaly-text {
+  color: #ef4444;
+}
+
+.neo-extended-description {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 1.2rem;
+}
+
+.neo-extended-description h3 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.neos-description {
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+  font-size: 0.95rem;
 }

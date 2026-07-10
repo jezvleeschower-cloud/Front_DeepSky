@@ -1,58 +1,42 @@
-import { useState } from 'react';
-import fondo1 from '../../../assets/fondo-1-DeepSks.png';
-import menuAstro from '../../../assets/menu-astroFoto.png';
-import SidebarMenu from '../../foto-del-dia/components/SidebarMenu';
-import '../../foto-del-dia/Astronomy.css';
+import React, { useState } from 'react';
 import './NeosPage.css';
+import SidebarMenu from '../../foto-del-dia/components/SidebarMenu';
+import menuLupa from '../../../assets/menu-lupa.png';
 
-const NEO_ITEMS = [
-  {
-    id: 1,
-    name: '2024 YR4',
-    magnitude: '21.7',
-    distance: '0.034 AU',
-    velocity: '12.4 km/s',
-    approach: '14 ago 2026',
-    hazard: true,
-    description: 'Este objeto ha captado la atención por su trayectoria cercana y su posible riesgo orbital en un futuro próximo.',
-    radarX: 64,
-    radarY: 42
-  },
-  {
-    id: 2,
-    name: '2023 CX1',
-    magnitude: '19.8',
-    distance: '0.048 AU',
-    velocity: '8.9 km/s',
-    approach: '22 sep 2026',
-    hazard: false,
-    description: 'Un asteroide de tamaño moderado que ofrece una excelente oportunidad para seguimiento con telescopios profesionales.',
-    radarX: 38,
-    radarY: 68
-  },
-  {
-    id: 3,
-    name: '2022 AP7',
-    magnitude: '22.1',
-    distance: '0.061 AU',
-    velocity: '15.2 km/s',
-    approach: '01 oct 2026',
-    hazard: false,
-    description: 'Objeto relativamente pequeño, pero muy útil para estudiar trayectorias de paso cercano a la Tierra.',
-    radarX: 76,
-    radarY: 74
-  }
+// Datos estáticos de prueba de los Objetos Cercanos a la Tierra con coordenadas para la gráfica
+const MOCK_NEOS = [
+  { id: '1', name: '2024 YR4', magnitude: 21.7, speed: '12.4 km/s', distance: '0.034 AU', approachDate: '14 ago 2026', description: 'Este objeto ha captado la atención por su trayectoria cercana y su posible riesgo orbital en un futuro próximo.', anomalyLevel: 75, chartX: 30, chartY: 70 },
+  { id: '2', name: 'Apophis 99942', magnitude: 19.2, speed: '30.7 km/s', distance: '0.022 AU', approachDate: '13 abr 2029', description: 'Uno de los asteroides con mayor seguimiento debido a sus aproximaciones históricas recurrentes a la Tierra.', anomalyLevel: 90, chartX: 75, chartY: 85 },
+  { id: '3', name: '2026 AS1', magnitude: 24.1, speed: '9.1 km/s', distance: '0.085 AU', approachDate: '22 sep 2026', description: 'Cuerpo menor de reciente detección orbitando el cinturón interior con baja probabilidad de impacto.', anomalyLevel: 35, chartX: 60, chartY: 25 }
 ];
 
-export default function NeosPage({ onNavigate, activeView = 'neos' }) {
+export default function NeosPage({ onNavigate, activeView }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [selectedNeo, setSelectedNeo] = useState(NEO_ITEMS[0]);
+  const [selectedNeo, setSelectedNeo] = useState(MOCK_NEOS[0]);
 
   return (
-    <main className="neos-page" style={{ backgroundImage: `url(${fondo1})` }}>
-      <button className="forum-menu-trigger" onClick={() => setIsMenuOpen(true)} aria-label="Abrir menú">
-        <img src={menuAstro} alt="Menú" />
-      </button>
+    <div className="neos-page">
+      
+      {/* Cabecera oficial compartida de DeepSky */}
+      <nav className="navbar-shared">
+        <div className="nav-left-shared">
+          <button className="menu-btn-shared" onClick={() => setIsMenuOpen(true)} aria-label="Abrir menú">
+            <img src={menuLupa} alt="Menú Principal" className="menu-icon-shared" />
+          </button>
+          <div className="brand-location-shared">
+            <span className="brand-text-shared">DeepSky</span>
+            <span className="separator-shared">|</span>
+            <span className="location-text-shared">OBJETOS CERCANOS A LA TIERRA</span>
+          </div>
+        </div>
+        <div className="nav-right-shared">
+          <button className="account-access" onClick={() => onNavigate && onNavigate('login')}>
+            MI CUENTA
+          </button>
+        </div>
+      </nav>
+
+      {/* Menú de navegación lateral */}
       <SidebarMenu
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
@@ -63,92 +47,123 @@ export default function NeosPage({ onNavigate, activeView = 'neos' }) {
         }}
       />
 
-      <div className="foro-page-inner neos-page-inner">
-        <section className="foro-hero neos-hero">
-          <div className="foro-menu-location">
-            <img src={menuAstro} alt="NEOs" />
-            <span>NEOs / Seguimiento</span>
-          </div>
-          <h1>Objetos Cercanos a la Tierra</h1>
-          <p>Consulta los cuerpos más cercanos al planeta, su velocidad, distancia y nivel de seguimiento.</p>
-        </section>
+      {/* Contenido principal del módulo NEOs */}
+      <main className="neos-content-wrapper">
+        <header className="neos-hero-section">
+          <h2>Objetos Cercanos a la Tierra</h2>
+          <p>Consulta los cuerpos más cercanos al planeta, su velocidad, distancia y nivel de seguimiento orbital en tiempo real.</p>
+        </header>
 
-        <section className="neos-grid">
-          <div className="neos-radar-panel">
-            <div className="radar-scope">
-              <div className="radar-grid" />
-              <div className="radar-line" />
-              <div className="radar-center" />
-              {NEO_ITEMS.map((neo) => (
-                <button
-                  key={neo.id}
-                  className={`radar-blip ${selectedNeo.id === neo.id ? 'selected' : ''}`}
-                  style={{ top: `${neo.radarY}%`, left: `${neo.radarX}%` }}
-                  onClick={() => setSelectedNeo(neo)}
-                  aria-label={neo.name}
-                />
-              ))}
-            </div>
-            <p className="radar-caption">Haz clic sobre un punto del radar para ver la información del NEO.</p>
-          </div>
-
-          <aside className="neos-detail-card">
-            <div className="neos-detail-header">
-              <div>
-                <p className="retos-eyebrow">Seguimiento activo</p>
-                <h2>{selectedNeo.name}</h2>
-              </div>
-              <span className={`neos-risk ${selectedNeo.hazard ? 'danger' : 'safe'}`}>
-                {selectedNeo.hazard ? 'Potencialmente peligroso' : 'Sin riesgo detectado'}
-              </span>
-            </div>
-
-            <div className="neos-highlight-grid">
-              <div className="neos-metric">
-                <span>Magnitud</span>
-                <strong>{selectedNeo.magnitude}</strong>
-              </div>
-              <div className="neos-metric">
-                <span>Distancia</span>
-                <strong>{selectedNeo.distance}</strong>
-              </div>
-              <div className="neos-metric">
-                <span>Velocidad</span>
-                <strong>{selectedNeo.velocity}</strong>
-              </div>
-              <div className="neos-metric">
-                <span>Próximo paso</span>
-                <strong>{selectedNeo.approach}</strong>
-              </div>
-            </div>
-
-            <p className="neos-description">{selectedNeo.description}</p>
-
-            <div className="neos-activity-card">
-              <h3>Observación recomendada</h3>
-              <p>Se recomienda mantener seguimiento con telescopios de campo amplio durante la semana anterior al acercamiento.</p>
-            </div>
-
-            <div className="neos-timeline-card">
-              <h3>Timeline de acercamientos</h3>
-              <div className="neos-timeline">
-                <div className="timeline-step active">
-                  <span>01</span>
-                  <strong>Detección</strong>
+        <div className="neos-dashboard-grid">
+          
+          {/* Columna Izquierda: Radar e Interfaz de la Gráfica de Puntos */}
+          <section className="neos-visual-panel">
+            <div className="radar-card">
+              <h3>Radar de Seguimiento Activo</h3>
+              <p className="radar-instruction">Haz clic sobre un punto del radar para ver la información del NEO</p>
+              
+              <div className="radar-screen">
+                <div className="radar-sweep"></div>
+                <div className="radar-circle circle-1"></div>
+                <div className="radar-circle circle-2"></div>
+                <div className="radar-circle circle-3"></div>
+                <div className="radar-cross-x"></div>
+                <div className="radar-cross-y"></div>
+                
+                {/* Indicador del planeta Tierra en el centro geométrico */}
+                <div className="radar-earth-center" title="Planeta Tierra">
+                  <div className="earth-core"></div>
                 </div>
-                <div className="timeline-step active">
-                  <span>02</span>
-                  <strong>Seguimiento</strong>
-                </div>
-                <div className="timeline-step active">
-                  <span>03</span>
-                  <strong>Acercamiento</strong>
-                </div>
+                
+                {/* Puntos del radar sincronizados */}
+                {MOCK_NEOS.map(neo => (
+                  <button
+                    key={`radar-${neo.id}`}
+                    className={`radar-dot ${selectedNeo.id === neo.id ? 'active' : ''}`}
+                    style={{ left: `${neo.chartX}%`, top: `${neo.chartY}%` }}
+                    onClick={() => setSelectedNeo(neo)}
+                    title={neo.name}
+                  />
+                ))}
               </div>
             </div>
-          </aside>
-        </section>
-      </div>
-    </main>
+
+            {/* Nueva Gráfica Analítica de Dispersión de Asteroides */}
+            <div className="anomaly-chart-card">
+              <h3>Gráfica Orbital Analítica</h3>
+              <p className="radar-instruction">Presiona un punto para cargar sus métricas en el panel derecho</p>
+              
+              <div className="neo-scatter-plot">
+                {/* Líneas de cuadrícula de fondo */}
+                <div className="plot-grid-line grid-v-25"></div>
+                <div className="plot-grid-line grid-v-50"></div>
+                <div className="plot-grid-line grid-v-75"></div>
+                <div className="plot-grid-line grid-h-25"></div>
+                <div className="plot-grid-line grid-h-50"></div>
+                <div className="plot-grid-line grid-h-75"></div>
+
+                {/* Etiquetas de los ejes */}
+                <span className="axis-label axis-y-label">Anomalía (%)</span>
+                <span className="axis-label axis-x-label">Distancia Relativa</span>
+
+                {/* Renderizado de los asteroides como puntos en la gráfica */}
+                {MOCK_NEOS.map(neo => (
+                  <div
+                    key={`plot-${neo.id}`}
+                    className={`plot-point-wrapper ${selectedNeo.id === neo.id ? 'selected-point' : ''}`}
+                    style={{ left: `${neo.chartX}%`, bottom: `${neo.chartY}%` }}
+                  >
+                    <button
+                      className="plot-point"
+                      onClick={() => setSelectedNeo(neo)}
+                      aria-label={`Ver métricas de ${neo.name}`}
+                    />
+                    <span className="plot-point-name">{neo.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Columna Derecha: Tarjeta de Detalles y Métricas en Tiempo Real */}
+          <section className="neos-details-panel">
+            <div className="neo-data-card">
+              <span className="tracking-badge">MÉTRICAS DEL ASTEROIDE</span>
+              <h2 className="neo-name-heading">{selectedNeo.name}</h2>
+              
+              <div className="neo-stats-grid">
+                <div className="stat-box">
+                  <span className="stat-title">Magnitud Absoluta</span>
+                  <strong className="stat-number">{selectedNeo.magnitude} M</strong>
+                </div>
+                <div className="stat-box">
+                  <span className="stat-title">Velocidad Relativa</span>
+                  <strong className="stat-number">{selectedNeo.speed}</strong>
+                </div>
+                <div className="stat-box">
+                  <span className="stat-title">Distancia Mínima</span>
+                  <strong className="stat-number">{selectedNeo.distance}</strong>
+                </div>
+                <div className="stat-box">
+                  <span className="stat-title">Nivel de Anomalía</span>
+                  <strong className="stat-number anomaly-text">{selectedNeo.anomalyLevel}%</strong>
+                </div>
+              </div>
+
+              <div className="stat-box full-width-stat">
+                <span className="stat-title">Fecha Próxima de Acercamiento</span>
+                <strong className="stat-number">{selectedNeo.approachDate}</strong>
+              </div>
+
+              <div className="neo-extended-description">
+                <h3>Análisis de Trayectoria</h3>
+                <p className="neos-description">{selectedNeo.description}</p>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </main>
+    </div>
   );
 }
