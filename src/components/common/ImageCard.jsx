@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function ImageCard({ image, isFavorite, onToggleFavorite, onSelectImage }) {
+export default function ImageCard({ image, isFavorite, isAuthenticated, onToggleFavorite, onSelectImage }) {
   const author = image.author && image.author.trim() ? image.author : 'NASA'
 
   function handleFav(e) {
@@ -13,15 +13,14 @@ export default function ImageCard({ image, isFavorite, onToggleFavorite, onSelec
       <div className="card-image-wrapper" onClick={() => onSelectImage && onSelectImage(image)}>
         <img className="grid-thumbnail-img" src={image.url} alt={image.title} />
       </div>
-
       <div className="card-bottom-bar">
         <div>
           <div className="card-item-title">{image.title}</div>
           <div className="card-item-author">{author}</div>
         </div>
         <div>
-          <button className="favorite-action-btn" onClick={handleFav}>
-            {isFavorite ? 'Quitar de Favoritos' : 'Agregar a Favoritos'}
+          <button className={`favorite-action-btn ${!isAuthenticated ? 'locked' : ''}`} onClick={handleFav}>
+            {!isAuthenticated ? 'Inicia sesión' : isFavorite ? 'Quitar de Favoritos' : 'Agregar a Favoritos'}
           </button>
         </div>
       </div>

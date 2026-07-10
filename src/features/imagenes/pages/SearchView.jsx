@@ -3,11 +3,11 @@ import './SearchView.css';
 import ImageCard from '../../../components/common/ImageCard';
 import { favoritesService } from '../../../services/favoritesService';
 import SidebarMenu from '../../foto-del-dia/components/SidebarMenu';
+import useAuth from '../../../hooks/useAuth';
 import fondo1 from '../../../assets/fondo-1-DeepSks.png';
 import fondo4 from '../../../assets/fondo-4-DeepSks.png';
 import menuLupa from '../../../assets/menu-lupa.png';
 
-// Datos estáticos de prueba preparados para el renderizado
 const MOCK_IMAGES = [
   { id: '1', title: 'Galaxia Espiral', author: 'Cerqueira', category: 'Galaxias', url: 'https://images-assets.nasa.gov/image/PIA12348/PIA12348~medium.jpg' },
   { id: '2', title: 'Estrella Gigante', author: 'Arnaud Girault', category: 'Estrellas', url: 'https://images-assets.nasa.gov/image/PIA11667/PIA11667~medium.jpg' },
@@ -16,17 +16,20 @@ const MOCK_IMAGES = [
 ];
 
 export default function SearchView({ onNavigate, activeView }) {
+  const { isAuthenticated } = useAuth();
   const [activeTab, setActiveTab] = useState('busqueda');
   const [selectedCategory, setSelectedCategory] = useState('Todos');
   const [searchQuery, setSearchQuery] = useState('');
   const [favoritesList, setFavoritesList] = useState(() => favoritesService.getAll().map(i => i.id));
   const [selectedImageDetail, setSelectedImageDetail] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   const categories = ['Todos', 'Galaxias', 'Nebulosas', 'Planetas', 'Estrellas'];
 
-  // Maneja la adición y eliminación de elementos en favoritos
   function toggleFavorite(id) {
+    if (!isAuthenticated) {
+      onNavigate && onNavigate('login');
+      return;
+    }
     const exists = favoritesList.includes(id);
     if (exists) {
       favoritesService.remove(id);
@@ -37,7 +40,14 @@ export default function SearchView({ onNavigate, activeView }) {
     setFavoritesList(favoritesService.getAll().map(i => i.id));
   }
 
-  // Filtrado lógico de elementos mediante queries y categorías
+  function handleFavoritesTabClick() {
+    if (!isAuthenticated) {
+      onNavigate && onNavigate('login');
+      return;
+    }
+    setActiveTab('favoritos');
+  }
+
   const filtered = useMemo(() => {
     let arr = MOCK_IMAGES.slice();
     if (activeTab === 'favoritos') arr = arr.filter(i => favoritesList.includes(i.id));
@@ -48,8 +58,6 @@ export default function SearchView({ onNavigate, activeView }) {
 
   return (
     <div className="search-view" style={{ backgroundImage: selectedImageDetail ? `url(${fondo4})` : `url(${fondo1})` }}>
-      
-      {/* Cabecera compartida oficial */}
       <nav className="navbar-shared">
         <div className="nav-left-shared">
           <button className="menu-btn-shared" onClick={() => setIsMenuOpen(true)} aria-label="Abrir menú">
@@ -62,13 +70,12 @@ export default function SearchView({ onNavigate, activeView }) {
           </div>
         </div>
         <div className="nav-right-shared">
-          <button className="account-access" onClick={() => onNavigate && onNavigate('login')}>
+          <button className="account-access" onClick={() => onNavigate && onNavigate(isAuthenticated ? 'account' : 'login')}>
             MI CUENTA
           </button>
         </div>
       </nav>
 
-      {/* Menú lateral interactivo de navegación */}
       <SidebarMenu
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
@@ -88,44 +95,43 @@ export default function SearchView({ onNavigate, activeView }) {
             </div>
             <h2>{selectedImageDetail.title}</h2>
             <p>Descripción técnica simulada de la imagen por la NASA para pruebas.</p>
-            <button className="favorite-action-btn" onClick={() => toggleFavorite(selectedImageDetail.id)}>
-              {favoritesList.includes(selectedImageDetail.id) ? 'Quitar de Favoritos' : 'Agregar a Favoritos'}
+            <button className={`favorite-action-btn ${!isAuthenticated ? 'locked' : ''}`} onClick={() => toggleFavorite(selectedImageDetail.id)}>
+              {!isAuthenticated ? 'Inicia sesión para agregar a favoritos' : favoritesList.includes(selectedImageDetail.id) ? 'Quitar de Favoritos' : 'Agregar a Favoritos'}
             </button>
           </div>
         ) : (
           <div className="gallery-view">
             <div className="tabs">
-              <button 
+              <button
                 className={`tab-btn-text ${activeTab === 'busqueda' ? 'active' : ''}`}
                 onClick={() => setActiveTab('busqueda')}
               >
                 BÚSQUEDA
               </button>
-              <button 
-                className={`tab-btn-text ${activeTab === 'favoritos' ? 'active' : ''}`}
-                onClick={() => setActiveTab('favoritos')}
+              <button
+                className={`tab-btn-text ${activeTab === 'favoritos' ? 'active' : ''} ${!isAuthenticated ? 'locked' : ''}`}
+                onClick={handleFavoritesTabClick}
               >
-                FAVORITOS ({favoritesList.length})
+                {isAuthenticated ? `FAVORITOS (${favoritesList.length})` : 'FAVORITOS 🔒'}
               </button>
             </div>
 
             {activeTab === 'busqueda' && (
               <div className="search-bar-frame">
-                <input 
-                  className="nasa-text-input" 
+                <input
+                  className="nasa-text-input"
                   placeholder="Buscar imágenes..."
-                  value={searchQuery} 
-                  onChange={e => setSearchQuery(e.target.value)} 
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
                 />
               </div>
             )}
 
-            {/* Fila de categorías con botones CSS puros */}
             <div className="category-filters">
               {categories.map(cat => (
-                <button 
-                  key={cat} 
-                  className={`cat-btn-pure ${selectedCategory === cat ? 'active' : ''}`} 
+                <button
+                  key={cat}
+                  className={`cat-btn-pure ${selectedCategory === cat ? 'active' : ''}`}
                   onClick={() => setSelectedCategory(cat)}
                 >
                   {cat.toUpperCase()}
@@ -133,17 +139,17 @@ export default function SearchView({ onNavigate, activeView }) {
               ))}
             </div>
 
-            {/* Grid de resultados controlado para evitar desbordes */}
             <div className="gallery-results-container">
               {filtered.length > 0 ? (
                 <div className="astro-images-grid">
                   {filtered.map(img => (
-                    <ImageCard 
-                      key={img.id} 
+                    <ImageCard
+                      key={img.id}
                       image={img}
-                      isFavorite={favoritesList.includes(img.id)} 
+                      isFavorite={favoritesList.includes(img.id)}
+                      isAuthenticated={isAuthenticated}
                       onToggleFavorite={toggleFavorite}
-                      onSelectImage={setSelectedImageDetail} 
+                      onSelectImage={setSelectedImageDetail}
                     />
                   ))}
                 </div>

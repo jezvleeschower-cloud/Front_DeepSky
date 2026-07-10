@@ -223,3 +223,8 @@
   .astro-images-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
   .search-content-wrapper { padding-left: 1rem; padding-right: 1rem; }
 }
+.favorite-action-btn.locked,
+.tab-btn-text.locked {
+  opacity: 0.6;
+  cursor: pointer;
+}
