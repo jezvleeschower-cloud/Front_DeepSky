@@ -1,4 +1,10 @@
-// useAuth placeholder
+import { useContext } from 'react';
+import { AuthContext } from '../app/providers/AuthProvider';
+
 export default function useAuth() {
-  return { user: null };
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth debe usarse dentro de un <AuthProvider>');
+  }
+  return context;
 }
