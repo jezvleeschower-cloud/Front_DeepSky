@@ -331,3 +331,13 @@
   .calendar-grid-layout { grid-template-columns: 1fr; } 
   .calendar-grid-box, .calendar-detail-box { height: auto; min-height: initial; }
 }
+.add-event-form input:disabled,
+.add-event-form textarea:disabled {
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.submit-event-btn.locked {
+  opacity: 0.6;
+  cursor: pointer;
+}

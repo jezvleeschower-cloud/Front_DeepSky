@@ -3,9 +3,11 @@ import { useState } from 'react';
 import './CalendarioPage.css';
 import menuIcon from '../../../assets/menu-calendario.png';
 import SidebarMenu from '../../foto-del-dia/components/SidebarMenu';
+import useAuth from '../../../hooks/useAuth';
 
 export default function CalendarioPage({ onNavigate, activeView = 'events' }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
   const [selectedDate, setSelectedDate] = useState(new Date('2026-07-07'));
   const [currentDate, setCurrentDate] = useState(new Date(2026, 6, 1)); // Julio 2026
 
@@ -60,7 +62,11 @@ export default function CalendarioPage({ onNavigate, activeView = 'events' }) {
 
   const handleAddEventSubmit = (e) => {
     e.preventDefault();
-    if (!draftTitle.trim()) return;
+    if (!isAuthenticated) {
+    onNavigate && onNavigate('login');
+    return;
+    }
+  if (!draftTitle.trim()) return;
 
     const dateStr = selectedDate.toISOString().split('T')[0];
     const newEvent = {
@@ -105,7 +111,7 @@ export default function CalendarioPage({ onNavigate, activeView = 'events' }) {
           </div>
         </div>
         <div className="nav-right-shared">
-          <button className="account-btn-shared" onClick={() => onNavigate('login')}>
+          <button className="account-btn-shared" onClick={() => onNavigate(isAuthenticated ? 'account' : 'login')}>
             MI CUENTA
           </button>
         </div>
@@ -220,33 +226,44 @@ export default function CalendarioPage({ onNavigate, activeView = 'events' }) {
               </div>
 
               <form className="add-event-form" onSubmit={handleAddEventSubmit}>
-                <h4>Añadir fecha</h4>
-                <input 
-                  type="text"
-                  placeholder="Título del evento" 
-                  value={draftTitle} 
-                  onChange={(e) => setDraftTitle(e.target.value)}
-                  required
-                />
-                <textarea
-                  placeholder="Descripción del evento (opcional)..."
-                  value={draftDescription}
-                  onChange={(e) => setDraftDescription(e.target.value)}
-                  className="forum-textarea-custom"
-                />
-                <div className="form-row-inline">
-                  <div className="time-input-wrapper">
-                    <input 
-                      type="time" 
-                      value={draftTime} 
-                      onChange={(e) => setDraftTime(e.target.value)}
-                      required
-                    />
-                    <span className="time-input-hint">Seleccionar hora</span>
-                  </div>
-                  <button type="submit" className="submit-event-btn">Agregar</button>
-                </div>
-              </form>
+  <h4>Añadir fecha</h4>
+  <input
+    type="text"
+    placeholder={isAuthenticated ? 'Título del evento' : 'Inicia sesión para agregar fechas'}
+    value={draftTitle}
+    onChange={(e) => setDraftTitle(e.target.value)}
+    onFocus={() => { if (!isAuthenticated) onNavigate && onNavigate('login'); }}
+    disabled={!isAuthenticated}
+    required
+  />
+  <textarea
+    placeholder="Descripción del evento (opcional)..."
+    value={draftDescription}
+    onChange={(e) => setDraftDescription(e.target.value)}
+    onFocus={() => { if (!isAuthenticated) onNavigate && onNavigate('login'); }}
+    disabled={!isAuthenticated}
+    className="forum-textarea-custom"
+  />
+  <div className="form-row-inline">
+    <div className="time-input-wrapper">
+      <input
+        type="time"
+        value={draftTime}
+        onChange={(e) => setDraftTime(e.target.value)}
+        onFocus={() => { if (!isAuthenticated) onNavigate && onNavigate('login'); }}
+        disabled={!isAuthenticated}
+        required
+      />
+      <span className="time-input-hint">Seleccionar hora</span>
+    </div>
+    <button
+      type="submit"
+      className={`submit-event-btn ${!isAuthenticated ? 'locked' : ''}`}
+    >
+      {isAuthenticated ? 'Agregar' : 'Inicia sesión'}
+    </button>
+  </div>
+</form>
             </div>
 
           </div>
