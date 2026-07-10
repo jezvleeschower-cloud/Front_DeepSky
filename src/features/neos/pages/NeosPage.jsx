@@ -2,12 +2,47 @@ import React, { useState } from 'react';
 import './NeosPage.css';
 import SidebarMenu from '../../foto-del-dia/components/SidebarMenu';
 import menuLupa from '../../../assets/menu-lupa.png';
+// 1. Importamos la imagen de fondo desde la carpeta assets
+import fondoDeepSky from '../../../assets/fondo-5-DeepSks.png';
 
 // Datos estáticos de prueba de los Objetos Cercanos a la Tierra con coordenadas para la gráfica
 const MOCK_NEOS = [
-  { id: '1', name: '2024 YR4', magnitude: 21.7, speed: '12.4 km/s', distance: '0.034 AU', approachDate: '14 ago 2026', description: 'Este objeto ha captado la atención por su trayectoria cercana y su posible riesgo orbital en un futuro próximo.', anomalyLevel: 75, chartX: 30, chartY: 70 },
-  { id: '2', name: 'Apophis 99942', magnitude: 19.2, speed: '30.7 km/s', distance: '0.022 AU', approachDate: '13 abr 2029', description: 'Uno de los asteroides con mayor seguimiento debido a sus aproximaciones históricas recurrentes a la Tierra.', anomalyLevel: 90, chartX: 75, chartY: 85 },
-  { id: '3', name: '2026 AS1', magnitude: 24.1, speed: '9.1 km/s', distance: '0.085 AU', approachDate: '22 sep 2026', description: 'Cuerpo menor de reciente detección orbitando el cinturón interior con baja probabilidad de impacto.', anomalyLevel: 35, chartX: 60, chartY: 25 }
+  {
+    id: '1', 
+    name: '2024 YR4', 
+    magnitude: 21.7, 
+    speed: '12.4 km/s', 
+    distance: '0.034 AU',
+    approachDate: '14 ago 2026', 
+    description: 'Este objeto ha captado la atención por su trayectoria cercana y su posible riesgo orbital en un futuro próximo.', 
+    anomalyLevel: 75, 
+    chartX: 30, 
+    chartY: 70
+  },
+  { 
+    id: '2', 
+    name: 'Apophis 99942', 
+    magnitude: 19.2, 
+    speed: '30.7 km/s', 
+    distance: '0.022 AU', 
+    approachDate: '13 abr 2029', 
+    description: 'Uno de los asteroides con mayor seguimiento debido a sus aproximaciones históricas recurrentes a la Tierra.',
+    anomalyLevel: 90, 
+    chartX: 75, 
+    chartY: 85
+  },
+  { 
+    id: '3', 
+    name: '2026 AS1', 
+    magnitude: 24.1, 
+    speed: '9.1 km/s', 
+    distance: '0.085 AU', 
+    approachDate: '22 sep 2026', 
+    description: 'Cuerpo menor de reciente detección orbitando el cinturón interior con baja probabilidad de impacto.', 
+    anomalyLevel: 35, 
+    chartX: 60, 
+    chartY: 25 
+  }
 ];
 
 export default function NeosPage({ onNavigate, activeView }) {
@@ -15,8 +50,11 @@ export default function NeosPage({ onNavigate, activeView }) {
   const [selectedNeo, setSelectedNeo] = useState(MOCK_NEOS[0]);
 
   return (
-    <div className="neos-page">
-      
+    // 2. Aplicamos el fondo dinámicamente usando estilos en línea
+    <div 
+      className="neos-page"
+      style={{ backgroundImage: `url(${fondoDeepSky})` }}
+    >
       {/* Cabecera oficial compartida de DeepSky */}
       <nav className="navbar-shared">
         <div className="nav-left-shared">
@@ -55,7 +93,6 @@ export default function NeosPage({ onNavigate, activeView }) {
         </header>
 
         <div className="neos-dashboard-grid">
-          
           {/* Columna Izquierda: Radar e Interfaz de la Gráfica de Puntos */}
           <section className="neos-visual-panel">
             <div className="radar-card">
@@ -69,12 +106,12 @@ export default function NeosPage({ onNavigate, activeView }) {
                 <div className="radar-circle circle-3"></div>
                 <div className="radar-cross-x"></div>
                 <div className="radar-cross-y"></div>
-                
+
                 {/* Indicador del planeta Tierra en el centro geométrico */}
                 <div className="radar-earth-center" title="Planeta Tierra">
                   <div className="earth-core"></div>
                 </div>
-                
+
                 {/* Puntos del radar sincronizados */}
                 {MOCK_NEOS.map(neo => (
                   <button
@@ -161,7 +198,6 @@ export default function NeosPage({ onNavigate, activeView }) {
               </div>
             </div>
           </section>
-
         </div>
       </main>
     </div>
