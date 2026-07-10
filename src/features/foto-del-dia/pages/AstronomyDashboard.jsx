@@ -27,8 +27,8 @@ export default function AstronomyDashboard({ onNavigate, activeView }) {
         onNavigate={onNavigate}
       />
       <SidebarMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} onNavigate={onNavigate} activeView={activeView} />
-      <MainContent data={MOCK_DATA} />
-      <CommentsPanel />
+      <MainContent data={MOCK_DATA} onNavigate={onNavigate} />
+      <CommentsPanel onNavigate={onNavigate} />
     </div>
   )
 }

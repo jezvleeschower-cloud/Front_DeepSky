@@ -342,6 +342,10 @@ background: linear-gradient(135deg, #7c3aed, #4f46e5);
 border-color: transparent; 
 box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25); 
 } 
+.action-pill.primary.locked {
+  opacity: 0.7;
+  font-size: 0.85rem;
+}
 .action-pill.primary:hover { 
 background: linear-gradient(135deg, #8b5cf6, #6366f1); 
 box-shadow: 0 6px 16px rgba(124, 58, 237, 0.4); 
@@ -497,6 +501,12 @@ font-style: italic;
 .custom-comment-input:focus { 
   border-color: #7c3aed; 
 } 
+
+.custom-comment-input:disabled,
+.submit-comment-btn:disabled {
+  opacity: 0.5;
+  cursor: pointer;
+}
  
 .submit-comment-btn {  
   background: #7c3aed;  
