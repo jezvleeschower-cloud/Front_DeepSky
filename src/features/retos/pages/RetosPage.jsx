@@ -3,6 +3,7 @@ import './RetosPage.css';
 import SidebarMenu from '../../foto-del-dia/components/SidebarMenu';
 import menuLupa from '../../../assets/menu-lupa.png';
 import fondo from '../../../assets/fondo-8-DeepSks.png';
+import useAuth from '../../../hooks/useAuth';
 
 const INITIAL_EVENTS = [
   {
@@ -11,16 +12,16 @@ const INITIAL_EVENTS = [
     description: 'Captura la luna con detalles y comparte tu mejor toma del cielo nocturno.',
     author: 'Marta',
     date: 'Hasta 20/07/2026',
-    imageUrl: 'https://images.unsplash.com/photo-1522030299830-16b8d3d049fe?w=600', 
+    imageUrl: 'https://images.unsplash.com/photo-1522030299830-16b8d3d049fe?w=600',
     topEntries: [
-      { id: 't1', title: 'Luz lunar', user: 'Niko', likes: 42, url: 'https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?w=500' },
-      { id: 't2', title: 'Cielo de verano', user: 'LunaX', likes: 38, url: 'https://images.unsplash.com/photo-1532960401447-7dd05bef20b0?w=500' },
-      { id: 't3', title: 'Brillo nocturno', user: 'Sofia', likes: 25, url: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=500' }
+      { id: 't1', title: 'Luz lunar', user: 'Niko', likes: 42, url: 'https://images.unsplash.com/photo-1522030299830-16b8d3d049fe?w=500' },
+      { id: 't2', title: 'Cielo de verano', user: 'LunaX', likes: 38, url: 'https://images.unsplash.com/photo-1522030299830-16b8d3d049fe?w=500' },
+      { id: 't3', title: 'Brillo nocturno', user: 'Sofia', likes: 25, url: 'https://images.unsplash.com/photo-1522030299830-16b8d3d049fe?w=500' }
     ],
     userGallery: [
-      { id: 'g1', title: 'Luz lunar', user: 'Niko', likes: 42, url: 'https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?w=500' },
-      { id: 'g2', title: 'Cielo de verano', user: 'LunaX', likes: 38, url: 'https://images.unsplash.com/photo-1532960401447-7dd05bef20b0?w=500' },
-      { id: 'g3', title: 'Brillo nocturno', user: 'Sofia', likes: 25, url: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=500' }
+      { id: 'g1', title: 'Luz lunar', user: 'Niko', likes: 42, url: 'https://images.unsplash.com/photo-1522030299830-16b8d3d049fe?w=500' },
+      { id: 'g2', title: 'Cielo de verano', user: 'LunaX', likes: 38, url: 'https://images.unsplash.com/photo-1522030299830-16b8d3d049fe?w=500' },
+      { id: 'g3', title: 'Brillo nocturno', user: 'Sofia', likes: 25, url: 'https://images.unsplash.com/photo-1522030299830-16b8d3d049fe?w=500' }
     ]
   },
   {
@@ -37,8 +38,9 @@ const INITIAL_EVENTS = [
 
 export default function RetosPage({ onNavigate, activeView }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
   const [events, setEvents] = useState(INITIAL_EVENTS);
-  const [selectedEvent, setSelectedEvent] = useState(null); 
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   // Estados de los modales
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -46,15 +48,20 @@ export default function RetosPage({ onNavigate, activeView }) {
 
   // Estados para formularios
   const [newChallenge, setNewChallenge] = useState({ title: '', description: '', date: 'Hasta 30/08/2026' });
-  const [challengeFile, setChallengeFile] = useState(null); 
-  
+  const [challengeFile, setChallengeFile] = useState(null);
   const [newParticipation, setNewParticipation] = useState({ title: '' });
-  const [selectedFile, setSelectedFile] = useState(null); 
+  const [selectedFile, setSelectedFile] = useState(null);
 
+  // 1. Manejo de Likes (Protegido)
   const handleLike = (photoId) => {
+    if (!isAuthenticated) {
+      if (onNavigate) onNavigate('login');
+      return;
+    }
+
     const updatedEvents = events.map(evt => {
       if (evt.id !== selectedEvent.id) return evt;
-      
+
       const updatedGallery = evt.userGallery.map(img => 
         img.id === photoId ? { ...img, likes: img.likes + 1 } : img
       );
@@ -70,36 +77,40 @@ export default function RetosPage({ onNavigate, activeView }) {
     setSelectedEvent(updatedEvents.find(e => e.id === selectedEvent.id));
   };
 
+  // 2. Publicar nuevo reto (Protegido)
   const submitCreateChallenge = (e) => {
     e.preventDefault();
     if (!newChallenge.title || !newChallenge.description || !challengeFile) return;
 
     const challengeImgUrl = URL.createObjectURL(challengeFile);
-
     const created = {
       id: Date.now(),
       title: newChallenge.title,
       description: newChallenge.description,
       author: 'Tú',
       date: newChallenge.date,
-      imageUrl: challengeImgUrl, 
+      imageUrl: challengeImgUrl,
       topEntries: [],
       userGallery: []
     };
 
-    setEvents([created, ...events]);
-    setSelectedEvent(created); 
+    const updatedChallenges = [created, ...events];
+    setEvents(updatedChallenges);
+    setSelectedEvent(created);
+    
+    // Limpieza de estado
     setNewChallenge({ title: '', description: '', date: 'Hasta 30/08/2026' });
     setChallengeFile(null);
     setShowCreateModal(false);
   };
 
+  // 3. Subir participación a un reto (Protegido)
   const submitParticipation = (e) => {
     e.preventDefault();
     if (!newParticipation.title || !selectedFile) return;
 
     const objectUrl = URL.createObjectURL(selectedFile);
-
+    
     const updatedEvents = events.map(evt => {
       if (evt.id !== selectedEvent.id) return evt;
 
@@ -112,22 +123,25 @@ export default function RetosPage({ onNavigate, activeView }) {
       };
 
       const updatedGallery = [newPhoto, ...evt.userGallery];
-      const updatedTop = [...updatedGallery].sort((a, b) => b.likes - a.likes).slice(0, 3);
+      const updatedTop = [...updatedGallery]
+        .sort((a, b) => b.likes - a.likes)
+        .slice(0, 3);
 
       return { ...evt, userGallery: updatedGallery, topEntries: updatedTop };
     });
 
     setEvents(updatedEvents);
     setSelectedEvent(updatedEvents.find(e => e.id === selectedEvent.id));
+    
+    // Limpieza de estado
     setNewParticipation({ title: '' });
     setSelectedFile(null);
     setShowUploadModal(false);
   };
 
   return (
-    /* Cambiado: Clase de fondo fondo-8-DeepSks asignada */
     <div className="retos-page fondo-8-DeepSks">
-      
+      {/* NAVBAR */}
       <nav className="navbar-shared">
         <div className="nav-left-shared">
           <button className="menu-btn-shared" onClick={() => setIsMenuOpen(true)} aria-label="Abrir menú">
@@ -136,11 +150,15 @@ export default function RetosPage({ onNavigate, activeView }) {
           <div className="brand-location-shared">
             <span className="brand-text-shared">DeepSky</span>
             <span className="separator-shared">|</span>
-            <span className="location-text-shared">RETOS / ASTROFOTOGRAFÍA</span>
+            <span className="location-text-shared">RETOS/ASTROFOTOGRAFÍA</span>
           </div>
         </div>
+
         <div className="nav-right-shared">
-          <button className="account-access" onClick={() => onNavigate && onNavigate('login')}>
+          <button 
+            className="account-access" 
+            onClick={() => onNavigate && onNavigate(isAuthenticated ? 'account' : 'login')}
+          >
             MI CUENTA
           </button>
         </div>
@@ -163,14 +181,23 @@ export default function RetosPage({ onNavigate, activeView }) {
         </header>
 
         {!selectedEvent ? (
+          /* VISTA: LISTA DE RETOS */
           <section className="forum-list-view">
             <div className="forum-list-header">
               <h3>Eventos creados</h3>
-              <button className="create-challenge-btn-large" onClick={() => setShowCreateModal(true)}>
+              <button 
+                className="create-challenge-btn-large" 
+                onClick={() => { 
+                  if (!isAuthenticated) { 
+                    if (onNavigate) onNavigate('login'); 
+                    return; 
+                  } 
+                  setShowCreateModal(true); 
+                }}
+              >
                 + Crear un nuevo reto
               </button>
             </div>
-
             <div className="forum-grid-stack">
               {events.map((evt) => (
                 <article key={evt.id} className="forum-challenge-card" onClick={() => setSelectedEvent(evt)}>
@@ -195,30 +222,37 @@ export default function RetosPage({ onNavigate, activeView }) {
             </div>
           </section>
         ) : (
+          /* VISTA: DETALLE DEL RETO SELECCIONADO */
           <section className="challenge-focus-card animation-fade-in">
             <div className="back-bar">
               <button className="back-forum-btn" onClick={() => setSelectedEvent(null)}>
                 ← Volver al listado de retos
               </button>
             </div>
-
             <div className="focus-card-header">
               <div>
                 <span className="status-eyebrow">EVENTO ACTIVO</span>
                 <h2>{selectedEvent.title}</h2>
                 <p className="event-credits">
-                  Creado por {selectedEvent.author} • <span className="date-highlight">{selectedEvent.date}</span>
+                  Creado por {selectedEvent.author} <span className="date-highlight">{selectedEvent.date}</span>
                 </p>
               </div>
-              
-              <button className="upload-participation-btn" onClick={() => setShowUploadModal(true)}>
+              <button 
+                className="upload-participation-btn" 
+                onClick={() => {
+                  if (!isAuthenticated) { 
+                    if (onNavigate) onNavigate('login'); 
+                    return; 
+                  } 
+                  setShowUploadModal(true); 
+                }}
+              >
                 Subir tu participación
               </button>
             </div>
-
             <p className="event-full-description">{selectedEvent.description}</p>
 
-            {/* Top 3 */}
+            {/* TOP 3 PODIUM */}
             {selectedEvent.topEntries.length > 0 && (
               <div className="top-podium-section">
                 <h3>Top 3 más valoradas</h3>
@@ -239,7 +273,7 @@ export default function RetosPage({ onNavigate, activeView }) {
               </div>
             )}
 
-            {/* Galería */}
+            {/* GALERÍA DE USUARIOS */}
             <div className="gallery-section">
               <h3>Fotos subidas por los usuarios</h3>
               {selectedEvent.userGallery.length > 0 ? (
@@ -271,7 +305,7 @@ export default function RetosPage({ onNavigate, activeView }) {
         )}
       </main>
 
-      {/* MODAL: Crear nuevo reto */}
+      {/* MODAL: CREAR NUEVO RETO */}
       {showCreateModal && (
         <div className="modal-overlay" onClick={() => setShowCreateModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -283,7 +317,7 @@ export default function RetosPage({ onNavigate, activeView }) {
                   type="text" 
                   placeholder="Ej. Reto de Cúmulos Estelares"
                   value={newChallenge.title}
-                  onChange={(e) => setNewChallenge({...newChallenge, title: e.target.value})}
+                  onChange={(e) => setNewChallenge({ ...newChallenge, title: e.target.value })}
                   required
                 />
               </div>
@@ -292,7 +326,7 @@ export default function RetosPage({ onNavigate, activeView }) {
                 <textarea 
                   placeholder="Describe los requisitos técnicos..."
                   value={newChallenge.description}
-                  onChange={(e) => setNewChallenge({...newChallenge, description: e.target.value})}
+                  onChange={(e) => setNewChallenge({ ...newChallenge, description: e.target.value })}
                   required
                 />
               </div>
@@ -315,7 +349,7 @@ export default function RetosPage({ onNavigate, activeView }) {
         </div>
       )}
 
-      {/* MODAL: Subir participación */}
+      {/* MODAL: SUBIR PARTICIPACIÓN */}
       {showUploadModal && (
         <div className="modal-overlay" onClick={() => setShowUploadModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -327,7 +361,7 @@ export default function RetosPage({ onNavigate, activeView }) {
                   type="text" 
                   placeholder="Ej. Vía Láctea desde el hemisferio sur"
                   value={newParticipation.title}
-                  onChange={(e) => setNewParticipation({...newParticipation, title: e.target.value})}
+                  onChange={(e) => setNewParticipation({ ...newParticipation, title: e.target.value })}
                   required
                 />
               </div>
@@ -349,7 +383,6 @@ export default function RetosPage({ onNavigate, activeView }) {
           </div>
         </div>
       )}
-
     </div>
   );
 }
