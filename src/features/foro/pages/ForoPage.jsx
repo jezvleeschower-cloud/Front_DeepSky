@@ -1,4 +1,3 @@
-// front/src/features/foro/pages/ForoPage.jsx
 import { useState } from 'react';
 import './ForoPage.css';
 import menuIcon from '../../../assets/menu-foro.png';
@@ -6,18 +5,19 @@ import SidebarMenu from '../../foto-del-dia/components/SidebarMenu';
 import useAuth from '../../../hooks/useAuth';
 
 export default function ForoPage({ onNavigate, activeView = 'forum' }) {
-  const { isAuthenticated } = useAuth();
+  // 1. Se desestructura role junto a isAuthenticated
+  const { isAuthenticated, role } = useAuth();
+  
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [topics, setTopics] = useState([
-    { id: 1, title: 'Descubrimientos recientes', author: 'AstronomaNova', posts: 12, lastActivity: 'Hace 10 min', category: 'Descubrimientos', image: null },
-    { id: 2, title: 'Cómo procesar imágenes astronómicas', author: 'CosmosPixel', posts: 8, lastActivity: 'Hace 1 hora', category: 'Imágenes', image: null },
+    { id: 1, title: 'Descubrimientos recientes', author: 'Astronoma Nova', posts: 12, lastActivity: 'Hace 10 min', category: 'Descubrimientos', image: null },
+    { id: 2, title: 'Cómo procesar imágenes astronómicas', author: 'Cosmos Pixel', posts: 8, lastActivity: 'Hace 1 hora', category: 'Imágenes', image: null },
     { id: 3, title: 'Telescopios recomendados para principiantes', author: 'Stargazer99', posts: 24, lastActivity: 'Hace 2 días', category: 'Telescopios', image: null }
   ]);
-
+  
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [currentCategory, setCurrentCategory] = useState('Todos');
   const [isCreatingTopic, setIsCreatingTopic] = useState(false);
-
   const [newTitle, setNewTitle] = useState('');
   const [newCategory, setNewCategory] = useState('Preguntas');
   const [newImage, setNewImage] = useState(null);
@@ -33,20 +33,24 @@ export default function ForoPage({ onNavigate, activeView = 'forum' }) {
     }
   };
 
-  const handleCreateTopicClick = () => {
-    if (!isAuthenticated) {
-      onNavigate && onNavigate('login');
-      return;
-    }
+  // 2. Control de clic para bloquear si no es admin
+  const handleCreateTopicClick = () => {  
+    if (!isAuthenticated) {    
+      onNavigate && onNavigate('login');    
+      return;  
+    }  
+    if (role !== 'admin') {    
+      return;  
+    }  
     setIsCreatingTopic(true);
   };
 
-  const handleCreateTopicSubmit = (e) => {
-    e.preventDefault();
-    if (!isAuthenticated) {
-      onNavigate && onNavigate('login');
-      return;
-    }
+  // 3. Control de submit para bloquear si no es admin
+  const handleCreateTopicSubmit = (e) => {  
+    e.preventDefault();  
+    if (!isAuthenticated || role !== 'admin') {    
+      return;  
+    }  
     if (!newTitle.trim()) return;
 
     const newTopic = {
@@ -58,6 +62,7 @@ export default function ForoPage({ onNavigate, activeView = 'forum' }) {
       category: newCategory,
       image: newImage
     };
+
     setTopics([newTopic, ...topics]);
     setNewTitle('');
     setNewImage(null);
@@ -70,7 +75,6 @@ export default function ForoPage({ onNavigate, activeView = 'forum' }) {
       return;
     }
     if (!newMessage.trim()) return;
-    // lógica real de guardado de mensaje, más adelante
     setNewMessage('');
   };
 
@@ -85,7 +89,7 @@ export default function ForoPage({ onNavigate, activeView = 'forum' }) {
           setIsMenuOpen(false);
         }}
       />
-
+      
       <nav className="navbar-shared">
         <div className="nav-left-shared">
           <button className="menu-btn-shared" onClick={() => setIsMenuOpen(true)} aria-label="Abrir menú de navegación">
@@ -109,16 +113,17 @@ export default function ForoPage({ onNavigate, activeView = 'forum' }) {
           <div className="foro-breadcrumb">
             <span className="breadcrumb-path">Foro / Inicio</span>
           </div>
-
+          
           <section className="foro-hero-banner">
             <h1>Foro Comunitario</h1>
             <p>Comparte tus hallazgos, dudas y opiniones relacionados con el espacio profundo y la astronomía.</p>
           </section>
 
-          {isCreatingTopic && isAuthenticated ? (
+          {/* 4. Render condicional del formulario solo si es admin */}
+          {isCreatingTopic && role === 'admin' ? (
             <section className="forum-form-section">
               <button className="back-forum-btn" onClick={() => setIsCreatingTopic(false)}>
-                ← Cancelar y volver
+                Cancelar y volver
               </button>
               <h2>Crear un nuevo tema de discusión</h2>
               <form onSubmit={handleCreateTopicSubmit} className="forum-creation-form">
@@ -160,7 +165,7 @@ export default function ForoPage({ onNavigate, activeView = 'forum' }) {
               </button>
               <div className="selected-topic-header">
                 <h2>{selectedTopic.title}</h2>
-                <p>Creado por: <strong>{selectedTopic.author}</strong> • Categoría: {selectedTopic.category}</p>
+                <p>Creado por: <strong>{selectedTopic.author}</strong> Categoría: {selectedTopic.category}</p>
               </div>
               {selectedTopic.image && (
                 <div className="topic-attached-image">
@@ -181,10 +186,7 @@ export default function ForoPage({ onNavigate, activeView = 'forum' }) {
                   onFocus={() => { if (!isAuthenticated) onNavigate && onNavigate('login'); }}
                   onChange={(e) => setNewMessage(e.target.value)}
                 ></textarea>
-                <button
-                  className={`send-message-btn ${!isAuthenticated ? 'locked' : ''}`}
-                  onClick={handleSendMessage}
-                >
+                <button className={`send-message-btn ${!isAuthenticated ? 'locked' : ''}`} onClick={handleSendMessage}>
                   Enviar
                 </button>
               </div>
@@ -193,13 +195,8 @@ export default function ForoPage({ onNavigate, activeView = 'forum' }) {
             <section className="forum-topics-section">
               <div className="section-topics-header">
                 <h2>Temas recientes</h2>
-                <button
-                  className={`create-topic-btn ${!isAuthenticated ? 'locked' : ''}`}
-                  onClick={handleCreateTopicClick}
-                  title={!isAuthenticated ? 'Inicia sesión para crear un tema' : ''}
-                >
-                  {isAuthenticated ? 'Crear nuevo tema' : 'Inicia sesión para crear un tema'}
-                </button>
+                {/* 5. Botón modificado con clases y títulos dinámicos por rol */}
+                <button  className={`create-topic-btn ${role !== 'admin' ? 'locked' : ''}`}  onClick={handleCreateTopicClick}  title={!isAuthenticated ? 'Inicia sesión para crear un tema' : role !== 'admin' ? 'Solo administradores pueden crear temas' : ''}>  {!isAuthenticated ? 'Inicia sesión para crear un tema' : role !== 'admin' ? 'Solo administradores' : 'Crear nuevo tema'}</button>
               </div>
 
               <div className="forum-categories-bar">
@@ -217,11 +214,7 @@ export default function ForoPage({ onNavigate, activeView = 'forum' }) {
               <div className="topics-rows-container">
                 {filteredTopics.length > 0 ? (
                   filteredTopics.map(topic => (
-                    <article
-                      key={topic.id}
-                      className="topic-row-card"
-                      onClick={() => setSelectedTopic(topic)}
-                    >
+                    <article key={topic.id} className="topic-row-card" onClick={() => setSelectedTopic(topic)}>
                       <div className="topic-row-main">
                         <h3>{topic.title}</h3>
                         <span className="topic-row-author-name">Por {topic.author}</span>

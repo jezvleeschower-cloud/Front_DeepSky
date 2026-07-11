@@ -38,14 +38,14 @@ const INITIAL_EVENTS = [
 
 export default function RetosPage({ onNavigate, activeView }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, role } = useAuth();
   const [events, setEvents] = useState(INITIAL_EVENTS);
   const [selectedEvent, setSelectedEvent] = useState(null);
-
+  
   // Estados de los modales
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
-
+  
   // Estados para formularios
   const [newChallenge, setNewChallenge] = useState({ title: '', description: '', date: 'Hasta 30/08/2026' });
   const [challengeFile, setChallengeFile] = useState(null);
@@ -58,28 +58,24 @@ export default function RetosPage({ onNavigate, activeView }) {
       if (onNavigate) onNavigate('login');
       return;
     }
-
     const updatedEvents = events.map(evt => {
       if (evt.id !== selectedEvent.id) return evt;
-
-      const updatedGallery = evt.userGallery.map(img => 
+      const updatedGallery = evt.userGallery.map(img =>
         img.id === photoId ? { ...img, likes: img.likes + 1 } : img
       );
-
       const updatedTop = [...updatedGallery]
         .sort((a, b) => b.likes - a.likes)
         .slice(0, 3);
-
       return { ...evt, userGallery: updatedGallery, topEntries: updatedTop };
     });
-
     setEvents(updatedEvents);
     setSelectedEvent(updatedEvents.find(e => e.id === selectedEvent.id));
   };
 
-  // 2. Publicar nuevo reto (Protegido)
+  // 2. Publicar nuevo reto (Protegido por Rol Admin)
   const submitCreateChallenge = (e) => {
     e.preventDefault();
+    if (!isAuthenticated || role !== 'admin') return;
     if (!newChallenge.title || !newChallenge.description || !challengeFile) return;
 
     const challengeImgUrl = URL.createObjectURL(challengeFile);
@@ -108,12 +104,10 @@ export default function RetosPage({ onNavigate, activeView }) {
   const submitParticipation = (e) => {
     e.preventDefault();
     if (!newParticipation.title || !selectedFile) return;
-
     const objectUrl = URL.createObjectURL(selectedFile);
     
     const updatedEvents = events.map(evt => {
       if (evt.id !== selectedEvent.id) return evt;
-
       const newPhoto = {
         id: Date.now(),
         title: newParticipation.title,
@@ -121,12 +115,10 @@ export default function RetosPage({ onNavigate, activeView }) {
         likes: 0,
         url: objectUrl
       };
-
       const updatedGallery = [newPhoto, ...evt.userGallery];
       const updatedTop = [...updatedGallery]
         .sort((a, b) => b.likes - a.likes)
         .slice(0, 3);
-
       return { ...evt, userGallery: updatedGallery, topEntries: updatedTop };
     });
 
@@ -153,10 +145,9 @@ export default function RetosPage({ onNavigate, activeView }) {
             <span className="location-text-shared">RETOS/ASTROFOTOGRAFÍA</span>
           </div>
         </div>
-
         <div className="nav-right-shared">
-          <button 
-            className="account-access" 
+          <button
+            className="account-access"
             onClick={() => onNavigate && onNavigate(isAuthenticated ? 'account' : 'login')}
           >
             MI CUENTA
@@ -185,19 +176,19 @@ export default function RetosPage({ onNavigate, activeView }) {
           <section className="forum-list-view">
             <div className="forum-list-header">
               <h3>Eventos creados</h3>
-              <button 
-                className="create-challenge-btn-large" 
-                onClick={() => { 
-                  if (!isAuthenticated) { 
-                    if (onNavigate) onNavigate('login'); 
-                    return; 
-                  } 
-                  setShowCreateModal(true); 
+              <button
+                className={`create-challenge-btn-large ${role !== 'admin' ? 'locked' : ''}`}
+                onClick={() => {
+                  if (!isAuthenticated) { onNavigate && onNavigate('login'); return; }
+                  if (role !== 'admin') return;
+                  setShowCreateModal(true);
                 }}
+                title={role !== 'admin' && isAuthenticated ? 'Solo administradores pueden crear retos' : ''}
               >
-                + Crear un nuevo reto
+                {role === 'admin' ? '+ Crear un nuevo reto' : isAuthenticated ? 'Solo administradores' : '+ Crear un nuevo reto'}
               </button>
             </div>
+            
             <div className="forum-grid-stack">
               {events.map((evt) => (
                 <article key={evt.id} className="forum-challenge-card" onClick={() => setSelectedEvent(evt)}>
@@ -229,6 +220,7 @@ export default function RetosPage({ onNavigate, activeView }) {
                 ← Volver al listado de retos
               </button>
             </div>
+            
             <div className="focus-card-header">
               <div>
                 <span className="status-eyebrow">EVENTO ACTIVO</span>
@@ -237,19 +229,20 @@ export default function RetosPage({ onNavigate, activeView }) {
                   Creado por {selectedEvent.author} <span className="date-highlight">{selectedEvent.date}</span>
                 </p>
               </div>
-              <button 
-                className="upload-participation-btn" 
+              <button
+                className="upload-participation-btn"
                 onClick={() => {
-                  if (!isAuthenticated) { 
-                    if (onNavigate) onNavigate('login'); 
-                    return; 
-                  } 
-                  setShowUploadModal(true); 
+                  if (!isAuthenticated) {
+                    if (onNavigate) onNavigate('login');
+                    return;
+                  }
+                  setShowUploadModal(true);
                 }}
               >
                 Subir tu participación
               </button>
             </div>
+
             <p className="event-full-description">{selectedEvent.description}</p>
 
             {/* TOP 3 PODIUM */}

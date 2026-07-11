@@ -345,3 +345,20 @@
   background: #7c3aed;
   color: #ffffff;
 }
+
+.curiosity-form textarea:disabled {
+  opacity: 0.5;
+  cursor: pointer;
+  border-style: dashed;
+}
+
+.add-curiosity-btn.locked {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+}
+.add-curiosity-btn.locked:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.5);
+}

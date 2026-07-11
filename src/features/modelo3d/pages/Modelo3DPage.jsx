@@ -17,7 +17,7 @@ const PLANETS_DATA = [
 ];
 
 export default function Modelo3DPage({ onNavigate, activeView }) { 
-const { isAuthenticated } = useAuth();
+const { isAuthenticated, role } = useAuth();
 const [isMenuOpen, setIsMenuOpen] = useState(false); 
 
 useEffect(() => {
@@ -34,6 +34,7 @@ if (!isAuthenticated) {
 
   const handleAddCuriosity = (e) => {
     e.preventDefault();
+    if (role !== 'admin') return;
     if (!newCuriosity.trim()) return;
 
     setCuriosities(prev => ({
@@ -173,16 +174,17 @@ if (!isAuthenticated) {
               </ul>
             </div>
 
-            <form className="curiosity-form" onSubmit={handleAddCuriosity}>
-              <textarea
-                placeholder="Añade una curiosidad para este planeta..."
-                value={newCuriosity}
-                onChange={(e) => setNewCuriosity(e.target.value)}
-                maxLength={200}
-              />
-              <button type="submit" className="add-curiosity-btn">
-                Agregar curiosidad
-              </button>
+            <form className="curiosity-form" onSubmit={handleAddCuriosity}> 
+              <textarea 
+                placeholder={role === 'admin' ? 'Añade una curiosidad para este planeta...' : 'Solo administradores pueden agregar curiosidades'} 
+                value={newCuriosity} 
+                onChange={(e) => setNewCuriosity(e.target.value)} 
+                disabled={role !== 'admin'}
+                maxLength={200} 
+              /> 
+              <button type="submit" className={`add-curiosity-btn ${role !== 'admin' ? 'locked' : ''}`}> 
+                {role === 'admin' ? 'Agregar curiosidad' : 'Solo administradores'}
+              </button> 
             </form>
           </section>
 
