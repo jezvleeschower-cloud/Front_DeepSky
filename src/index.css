@@ -1,0 +1,39 @@
+/* Reset Global */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+:root {
+  --bg-space: #0b0f19;
+  --bg-card: #161f30;
+  --bg-sidebar: #0e1624;
+  --text-main: #f3f4f6;
+  --text-muted: #9ca3af;
+  --accent-cosmic: #6366f1;
+  --accent-cosmic-hover: #4f46e5;
+  --border-color: #24324d;
+}
+
+body {
+  background-color: var(--bg-space);
+  color: var(--text-main);
+  overflow-x: hidden;
+}
+
+/* Scrollbar temática */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-space);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-cosmic);
+}
