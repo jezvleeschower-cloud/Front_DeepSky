@@ -1,0 +1,24 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+:root {
+  --bg-space: #070514;
+  --bg-card: rgba(22, 15, 46, 0.7);
+  --bg-sidebar: #0f0b2c;
+  --text-main: #ffffff;
+  --text-muted: #8b85b1;
+  --accent-purple: #6c42ca;
+  --accent-purple-hover: #5330a1;
+  --border-color: rgba(139, 133, 177, 0.2);
+}
+
+body {
+  background-color: var(--bg-space);
+  color: var(--text-main);
+  overflow-x: hidden;
+  min-height: 100vh;
+}

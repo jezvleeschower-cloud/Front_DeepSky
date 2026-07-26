@@ -1,0 +1,101 @@
+# Lista de palabras prohibidas para el filtro de moderación de texto.
+# - Una palabra por línea, en minúsculas y sin acentos.
+# - Las líneas que empiezan con # se ignoran (comentarios).
+# - El servicio normaliza el texto del usuario (minúsculas, sin acentos,
+#   sustituye leetspeak como 4->a, 3->e, 1->i, 0->o, 5->s) antes de comparar,
+#   así que no hace falta agregar variantes con números o acentos aquí.
+# - Edita este archivo libremente para agregar/quitar palabras; no requiere
+#   recompilar el código Java (solo reiniciar el servidor).
+
+# --- Español ---
+puto
+puta
+putos
+putas
+puton
+putona
+mierda
+mierdas
+cabron
+cabrona
+cabrones
+pendejo
+pendeja
+pendejos
+pendejadas
+verga
+vergas
+chingar
+chingada
+chingado
+chingar
+chingas
+chingatumadre
+joder
+jodido
+jodida
+gilipollas
+maricon
+marica
+maricones
+concha
+conchatumadre
+culero
+culera
+culeros
+pinche
+pinches
+zorra
+zorras
+perra
+perras
+hijueputa
+hijodeputa
+hdp
+malparido
+malparida
+gonorrea
+huevon
+huevona
+huevonada
+pito
+pitos
+tetas
+teta
+follar
+follando
+polla
+pollas
+coño
+cono
+mamahuevo
+mamaguevo
+mierdero
+mierdera
+putazo
+zorron
+guebon
+webon
+webona
+imbecil
+estupido
+estupida
+
+# --- Inglés (por si hay usuarios internacionales) ---
+fuck
+fucking
+fucker
+shit
+bitch
+bitches
+asshole
+bastard
+cunt
+dick
+pussy
+whore
+slut
+nigger
+nigga
+faggot
+retard

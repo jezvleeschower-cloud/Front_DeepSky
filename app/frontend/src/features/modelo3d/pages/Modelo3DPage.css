@@ -1,0 +1,508 @@
+/* Estructura General de la Página */
+/* Cambiado: Fondo adaptado con la imagen fondo-8-DeepSks de assets */
+.modelo3d-page {
+  position: relative;
+  min-height: 100vh;
+  color: #ffffff;
+  background-image: url('../../../assets/fondo-8-DeepSks.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.modelo3d-page {
+  position: relative;
+  min-height: 100vh;
+  color: #ffffff;
+  background-color: #0b081e;
+}
+
+/* Cabecera Compartida Oficial */
+.navbar-shared {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background: rgba(15, 11, 44, 0.6);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  z-index: 100;
+}
+
+.nav-left-shared { display: flex; align-items: center; gap: 1.5rem; }
+.menu-btn-shared { 
+  display: flex; align-items: center; justify-content: center;
+  width: 64px; height: 64px; background: rgba(255, 255, 255, 0.09); 
+  border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 16px;
+  cursor: pointer; transition: background 0.2s;
+  flex-shrink: 0;
+}
+.menu-btn-shared:hover { background: rgba(255, 255, 255, 0.16); }
+.menu-icon-shared { width: 36px; height: 36px; display: block; }
+.menu-icon-svg-shared { width: 30px; height: 30px; display: block; color: #ffffff; }
+.brand-location-shared { display: flex; align-items: center; gap: 0.75rem; min-width: 0; }
+.brand-text-shared { font-weight: 700; font-size: 1.35rem; letter-spacing: 1px; color: #ffffff; white-space: nowrap; }
+.separator-shared { color: rgba(255, 255, 255, 0.3); }
+.location-text-shared { color: rgba(255, 255, 255, 0.75); font-size: 0.95rem; letter-spacing: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.account-access {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #7c3aed, #4f46e5); 
+  border: none; 
+  color: #ffffff; 
+  padding: 0.65rem 1.5rem; 
+  border-radius: 999px; 
+  cursor: pointer; 
+  font-weight: 600; 
+  transition: all 0.3s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.account-access:hover { 
+  background: linear-gradient(135deg, #8b5cf6, #6366f1); 
+  box-shadow: 0 0 15px rgba(108, 66, 202, 0.35); 
+}
+
+/* Envoltura Interior */
+.modelo3d-page-inner {
+  padding: 120px 2rem 2rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.modelo3d-hero {
+  margin-bottom: 2rem;
+}
+.modelo3d-hero h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.modelo3d-hero p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.05rem;
+}
+
+/* Grid Layout */
+.modelo3d-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .modelo3d-layout { grid-template-columns: 1fr; }
+}
+
+.solar-system-card, .planet-detail-card {
+  background: rgba(20, 16, 49, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 2rem;
+  backdrop-filter: blur(12px);
+}
+
+/* MENÚ SELECTOR DE PLANETAS */
+.planets-selector-menu {
+  display: flex;
+  justify-content: flex-start;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+  background: rgba(5, 3, 20, 0.4);
+  padding: 0.5rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.selector-tab-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 0.5rem 1.1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.selector-tab-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.selector-tab-btn.active-tab {
+  color: #ffffff;
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
+}
+
+/* VISOR ESPACIAL CONTENEDOR */
+.space-viewport {
+  position: relative;
+  width: 100%;
+  height: 520px; /* Incrementado ligeramente para acomodar la perspectiva de Neptuno */
+  background: radial-gradient(circle at center, #07031a 0%, #020107 100%);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
+}
+
+.stars-background-layer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(rgba(255,255,255,0.12) 1px, transparent 1px);
+  background-size: 28px 28px;
+  opacity: 0.6;
+}
+
+.solar-system-3d-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotateX(68deg);
+  transform-style: preserve-3d;
+  transition: transform 0.2s ease;
+}
+
+/* Sol Central */
+.sun-body {
+  position: absolute;
+  width: 38px; /* Reducido levemente para balancear la escala */
+  height: 38px;
+  background: radial-gradient(circle at 35% 35%, #fff4cc 0%, #ffbb00 60%, #cc5200 100%);
+  border-radius: 50%;
+  z-index: 50;
+  transform: rotateX(-68deg);
+}
+.sun-glow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  box-shadow: 0 0 30px #f59e0b;
+}
+
+/* Líneas de Órbitas Elípticas Escalas con Variables Dinámicas */
+.orbit-ellipse-static {
+  position: absolute;
+  width: calc(var(--rx) * 2);
+  height: calc(var(--ry) * 2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+}
+
+/* PLANETAS: REDIMENSIONADOS Y RE-ALINEADOS AL FRENTE PERFECTAMENTE */
+.moving-planet-sphere {
+  position: absolute;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  cursor: pointer;
+  pointer-events: auto;
+  padding: 0;
+  
+  /* Bloquea la rotación de la cara iluminada por la trayectoria */
+  offset-rotate: 0deg; 
+  
+  /* Animación optimizada unificada para contragirar en X de forma constante */
+  animation: planetMoveLinear linear infinite, keepFacingFront linear infinite;
+}
+
+@keyframes planetMoveLinear {
+  from { offset-distance: 0%; }
+  to { offset-distance: 100%; }
+}
+
+@keyframes keepFacingFront {
+  from { transform: rotateX(-68deg); }
+  to { transform: rotateX(-68deg); }
+}
+
+.moving-planet-sphere:hover, .moving-planet-sphere.active {
+  border-color: #ffffff;
+  box-shadow: 0 0 20px #ffffff;
+  filter: brightness(1.2);
+}
+
+/* Cuando el planeta tiene TEXTURA_URL: se pinta la imagen real y gira sobre
+   sí mismo (desplazando la textura horizontalmente) en vez del degradado plano. */
+@keyframes texturaGiro {
+  from { background-position-x: 0%; }
+  to { background-position-x: 200%; }
+}
+
+.moving-planet-sphere.has-texture,
+.planet-preview.has-texture {
+  background-repeat: repeat-x;
+  background-size: 200% 100%;
+}
+
+.moving-planet-sphere.has-texture {
+  /* Se suma una 3ra animación de giro a las 2 que ya mueven al planeta en su órbita */
+  animation-name: planetMoveLinear, keepFacingFront, texturaGiro;
+}
+
+.planet-preview.has-texture {
+  animation: texturaGiro 6s linear infinite;
+}
+
+/* DETALLES DEL PLANETA */
+.planet-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.retos-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #a78bfa;
+  letter-spacing: 1px;
+  margin-bottom: 0.25rem;
+}
+
+.planet-detail-header h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.planet-preview {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
+}
+
+.planet-description {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.curiosities-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.curiosities-card h3 {
+  font-size: 1.05rem;
+  margin-bottom: 0.75rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.curiosities-card ul {
+  margin: 0;
+  padding-left: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.curiosities-card li {
+  font-size: 0.95rem;
+  color: #d1cbf2;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.curiosity-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.curiosity-item span {
+  flex: 1;
+}
+
+.delete-curiosity-btn {
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  line-height: 1;
+  padding: 2px;
+  opacity: 0.75;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.delete-curiosity-btn:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.curiosity-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.curiosity-form textarea {
+  width: 100%;
+  min-height: 80px;
+  background: rgba(5, 3, 20, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 0.8rem 1rem;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 0.9rem;
+  resize: none;
+  box-sizing: border-box;
+}
+
+.curiosity-form textarea:focus {
+  outline: none;
+  border-color: #7c3aed;
+}
+
+.add-curiosity-btn {
+  background: rgba(124, 58, 237, 0.15);
+  border: 1px solid #7c3aed;
+  color: #c084fc;
+  padding: 0.75rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.add-curiosity-btn:hover {
+  background: #7c3aed;
+  color: #ffffff;
+}
+
+.curiosity-form textarea:disabled {
+  opacity: 0.5;
+  cursor: pointer;
+  border-style: dashed;
+}
+
+.add-curiosity-btn.locked {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+}
+.add-curiosity-btn.locked:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ============================= */
+/* RESPONSIVE — TABLETS (≤1024px) */
+/* ============================= */
+@media (max-width: 1024px) {
+  .modelo3d-page-inner { padding: 104px 1.5rem 2rem; }
+  .space-viewport { height: 440px; }
+}
+
+/* ============================= */
+/* RESPONSIVE — TABLETS CHICAS / MÓVIL GRANDE (≤768px) */
+/* ============================= */
+@media (max-width: 768px) {
+  .navbar-shared { padding: 0 1rem; height: 64px; }
+  .nav-left-shared { gap: 0.85rem; }
+  .menu-btn-shared { width: 46px; height: 46px; border-radius: 12px; }
+  .menu-icon-shared { width: 26px; height: 26px; }
+  .menu-icon-svg-shared { width: 24px; height: 24px; }
+  .brand-text-shared { font-size: 1.05rem; }
+  .location-text-shared { display: none; }
+  .separator-shared { display: none; }
+  .account-access { padding: 0.5rem 1rem; font-size: 0.8rem; }
+
+  .modelo3d-page-inner { padding: 88px 1rem 1.5rem; }
+  .modelo3d-hero h2 { font-size: 1.5rem; }
+  .modelo3d-hero p { font-size: 0.9rem; }
+
+  .modelo3d-layout { gap: 1.25rem; }
+  .solar-system-card, .planet-detail-card {
+    padding: 1.25rem;
+    border-radius: 18px;
+  }
+
+  .planets-selector-menu { gap: 0.4rem; padding: 0.4rem; }
+  .selector-tab-btn { padding: 0.45rem 0.85rem; font-size: 0.8rem; }
+
+  .space-viewport { height: 340px; }
+
+  .planet-detail-header h2 { font-size: 1.5rem; }
+  .planet-preview { width: 44px; height: 44px; }
+  .planet-description { font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+  .curiosities-card { padding: 1rem; }
+  .curiosities-card li { font-size: 0.88rem; }
+}
+
+/* ============================= */
+/* RESPONSIVE — MÓVIL (≤480px) */
+/* ============================= */
+@media (max-width: 480px) {
+  .navbar-shared { height: 58px; padding: 0 0.75rem; }
+  .nav-left-shared { gap: 0.6rem; }
+  .menu-btn-shared { width: 40px; height: 40px; border-radius: 10px; }
+  .menu-icon-shared { width: 22px; height: 22px; }
+  .menu-icon-svg-shared { width: 20px; height: 20px; }
+  .brand-text-shared { font-size: 0.95rem; }
+  .account-access { padding: 0.45rem 0.85rem; font-size: 0.75rem; }
+
+  .modelo3d-page-inner { padding: 80px 0.75rem 1.25rem; }
+  .modelo3d-hero h2 { font-size: 1.25rem; }
+  .modelo3d-hero p { font-size: 0.85rem; }
+
+  .solar-system-card, .planet-detail-card {
+    padding: 1rem;
+    border-radius: 14px;
+  }
+
+  .selector-tab-btn { padding: 0.4rem 0.7rem; font-size: 0.75rem; }
+
+  .space-viewport { height: 260px; border-radius: 12px; }
+
+  .planet-detail-header { padding-bottom: 1rem; margin-bottom: 1rem; }
+  .planet-detail-header h2 { font-size: 1.3rem; }
+  .planet-preview { width: 38px; height: 38px; }
+
+  .curiosity-form textarea { font-size: 0.85rem; min-height: 70px; }
+  .add-curiosity-btn { font-size: 0.85rem; padding: 0.65rem; }
+}
